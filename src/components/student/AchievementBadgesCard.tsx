@@ -47,7 +47,7 @@ export function AchievementBadgesCard({
         {badges.map((b) => (
           <div
             key={b.id}
-            className={`relative flex flex-col items-center text-center rounded-2xl p-3 border-2 transition-all min-w-0 ${
+            className={`card-bounce relative flex flex-col items-center text-center rounded-2xl p-3 border-2 min-w-0 ${
               b.unlocked
                 ? "bg-white border-dashed border-[#FFAAA6] shadow-xs"
                 : "bg-[#f6f3ee]/80 border-dashed border-[#eadfd5]"

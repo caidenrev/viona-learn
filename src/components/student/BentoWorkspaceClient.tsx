@@ -301,7 +301,7 @@ export function BentoWorkspaceClient({
                 return (
                   <div
                     key={course.id}
-                    className={`relative rounded-3xl p-5 border-2 border-dashed transition-transform ${
+                    className={`card-bounce relative rounded-3xl p-5 border-2 border-dashed ${
                       isActive
                         ? "bg-[#fff2f1] border-[#FFAAA6] shadow-[0_8px_20px_rgba(142,75,73,0.12)]"
                         : isLocked

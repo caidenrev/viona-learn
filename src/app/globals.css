@@ -37,12 +37,69 @@
   }
 }
 
+@keyframes card-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.012);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .sticker-card {
   background-color: #ffffff;
   border: 2px dashed #eadfd5;
   box-shadow:
     0 0 0 3px #ffffff,
     0 6px 18px rgba(141, 110, 99, 0.09);
+  animation: card-pop 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+
+.card-bounce {
+  animation: card-pop 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+
+@media (hover: hover) {
+  .sticker-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 3px #ffffff,
+      0 12px 26px rgba(141, 110, 99, 0.14);
+  }
+
+  .card-bounce:hover {
+    transform: translateY(-4px) scale(1.015);
+  }
+}
+
+.card-bounce:active {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker-card,
+  .card-bounce {
+    animation: none;
+    transition: none;
+  }
+
+  .sticker-card:hover,
+  .card-bounce:hover,
+  .card-bounce:active {
+    transform: none;
+  }
 }
 
 .lined-memo {
