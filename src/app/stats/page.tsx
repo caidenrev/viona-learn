@@ -16,6 +16,8 @@ import {
   StarIcon,
 } from "@/components/icons/CartoonIcons";
 import { STICKERS } from "@/lib/stickers";
+import { computeAchievements } from "@/lib/achievements";
+import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
 
 export const dynamic = "force-dynamic";
 
@@ -27,38 +29,63 @@ export default async function StatsPage() {
   const todayKey = getJakartaTodayKey();
   const start28Key = shiftDateKey(todayKey, -27);
 
-  const [user, settings, activities, attempts, ratings, totalModules, completedModules] =
-    await Promise.all([
-      prisma.user.findUnique({ where: { id: session.userId } }),
-      prisma.appSettings.findUnique({ where: { id: "default" } }),
-      prisma.dailyActivity.findMany({
-        where: { userId: session.userId },
-        orderBy: { dateKey: "desc" },
-        take: 60,
-      }),
-      prisma.quizAttempt.findMany({
-        where: { userId: session.userId },
-        orderBy: { createdAt: "desc" },
-        take: 15,
-        include: { course: { select: { title: true } } },
-      }),
-      prisma.courseRating.findMany({
-        where: { userId: session.userId },
-        include: { course: { select: { title: true } } },
-      }),
-      prisma.module.count({
-        where: {
-          status: "PUBLISHED",
-          course: { status: "PUBLISHED", roadmap: { status: "PUBLISHED" } },
-        },
-      }),
-      prisma.moduleProgress.count({ where: { userId: session.userId } }),
-    ]);
+  const [
+    user,
+    settings,
+    activities,
+    attempts,
+    ratings,
+    totalModules,
+    completedModules,
+    passedCourses,
+    submissionsCount,
+    notesCount,
+  ] = await Promise.all([
+    prisma.user.findUnique({ where: { id: session.userId } }),
+    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.dailyActivity.findMany({
+      where: { userId: session.userId },
+      orderBy: { dateKey: "desc" },
+      take: 60,
+    }),
+    prisma.quizAttempt.findMany({
+      where: { userId: session.userId },
+      orderBy: { createdAt: "desc" },
+      take: 15,
+      include: { course: { select: { title: true } } },
+    }),
+    prisma.courseRating.findMany({
+      where: { userId: session.userId },
+      include: { course: { select: { title: true } } },
+    }),
+    prisma.module.count({
+      where: {
+        status: "PUBLISHED",
+        course: { status: "PUBLISHED", roadmap: { status: "PUBLISHED" } },
+      },
+    }),
+    prisma.moduleProgress.count({ where: { userId: session.userId } }),
+    prisma.courseProgress.count({
+      where: { userId: session.userId, status: "PASSED" },
+    }),
+    prisma.courseSubmission.count({ where: { userId: session.userId } }),
+    prisma.note.count({ where: { userId: session.userId } }),
+  ]);
 
   const streak = calculateCurrentStreak(
     activities.map((a) => a.dateKey),
     todayKey
   );
+  const bestQuizScore =
+    attempts.length > 0 ? Math.max(...attempts.map((a) => a.score)) : 0;
+  const achievements = computeAchievements({
+    completedModules,
+    currentStreak: streak.currentStreak,
+    passedCourses,
+    bestQuizScore,
+    submissionsCount,
+    notesCount,
+  });
   const totalHours = (
     activities.reduce((s, a) => s + a.studyMinutes, 0) / 60
   ).toFixed(1);
@@ -161,6 +188,8 @@ export default async function StatsPage() {
             </div>
           </WashiCard>
         </div>
+
+        <AchievementBadgesCard badges={achievements} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <WashiCard

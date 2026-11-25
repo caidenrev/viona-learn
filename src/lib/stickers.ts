@@ -9,6 +9,14 @@ export const STICKERS = {
   notesBearMemo: "/stickers/notes-bear-memo.png",
   playgroundBearLaptop: "/stickers/playground-bear-laptop.png",
   mentorBearDesk: "/stickers/mentor-bear-desk.png",
+  badges: {
+    firstStep: "/stickers/hirono.png",
+    streak: "/stickers/streak-sparkle-star.png",
+    quizMaster: "/stickers/quiz-bubble-cat.png",
+    perfectScore: "/stickers/passed-trophy-bunny.png",
+    builder: "/stickers/playground-bear-laptop.png",
+    noteKeeper: "/stickers/notes-bear-memo.png",
+  },
   sheet: {
     bunnyBook: "/stickers/sheet-bunny-book.png",
     bearDesk: "/stickers/sheet-bear-desk.png",

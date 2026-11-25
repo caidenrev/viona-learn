@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/PastelPrimitives";
 import { AppShell } from "@/components/layout/AppShell";
 import { LessonRenderer } from "@/components/editor/LessonRenderer";
+import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
+import { computeAchievements } from "@/lib/achievements";
 import { findEmojiViolations } from "@/lib/emoji-guard";
 
 describe("Kawaii stationery UI primitives", () => {
@@ -96,6 +98,22 @@ describe("Kawaii stationery UI primitives", () => {
     expect(html).toContain("const [n, setN] = useState(0);");
     expect(html).toContain("Coba Tombol Pastel");
     expect(html).toContain('sandbox="allow-scripts"');
+    expect(findEmojiViolations(html)).toEqual([]);
+  });
+
+  it("renders AchievementBadgesCard with Hirono badges and zero emojis", () => {
+    const badges = computeAchievements({
+      completedModules: 1,
+      currentStreak: 3,
+      passedCourses: 0,
+      bestQuizScore: 0,
+      submissionsCount: 0,
+      notesCount: 1,
+    });
+    const html = renderToStaticMarkup(<AchievementBadgesCard badges={badges} />);
+    expect(html).toContain("Koleksi Lencana Hirono");
+    expect(html).toContain("2 / 6 Tercapai");
+    expect(html).toContain("/stickers/hirono.png");
     expect(findEmojiViolations(html)).toEqual([]);
   });
 });

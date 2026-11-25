@@ -4,6 +4,7 @@ import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
 import { computeRoadmapCourseStates } from "@/lib/progression";
 import { calculateCurrentStreak } from "@/lib/streak";
+import { computeAchievements } from "@/lib/achievements";
 import { AppShell } from "@/components/layout/AppShell";
 import { BentoWorkspaceClient } from "@/components/student/BentoWorkspaceClient";
 
@@ -25,6 +26,8 @@ export default async function WorkspacePage() {
     tasks,
     notes,
     activities,
+    submissionsCount,
+    totalNotesCount,
   ] = await Promise.all([
     prisma.user.findUnique({ where: { id: session.userId } }),
     prisma.appSettings.findUnique({ where: { id: "default" } }),
@@ -64,6 +67,8 @@ export default async function WorkspacePage() {
       orderBy: { dateKey: "desc" },
       take: 60,
     }),
+    prisma.courseSubmission.count({ where: { userId: session.userId } }),
+    prisma.note.count({ where: { userId: session.userId } }),
   ]);
 
   const completedIds = new Set(moduleProgresses.map((m) => m.moduleId));
@@ -104,6 +109,18 @@ export default async function WorkspacePage() {
     todayKey
   );
 
+  const achievements = computeAchievements({
+    completedModules: moduleProgresses.length,
+    currentStreak: streak.currentStreak,
+    passedCourses: courseProgresses.filter((p) => p.status === "PASSED").length,
+    bestQuizScore:
+      courseProgresses.length > 0
+        ? Math.max(...courseProgresses.map((p) => p.bestScore))
+        : 0,
+    submissionsCount,
+    notesCount: totalNotesCount,
+  });
+
   return (
     <AppShell
       role="STUDENT"
@@ -118,6 +135,7 @@ export default async function WorkspacePage() {
         teacherWhatsapp={settings?.teacherWhatsapp ?? ""}
         todayKey={todayKey}
         initialStreak={streak}
+        achievements={achievements}
         roadmaps={serializedRoadmaps}
         initialTasks={tasks.map((t) => ({
           id: t.id,

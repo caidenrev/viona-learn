@@ -13,6 +13,8 @@ import {
   StarIcon,
 } from "@/components/icons/CartoonIcons";
 import { PomodoroWidget } from "@/components/student/PomodoroWidget";
+import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
+import type { AchievementBadge } from "@/lib/achievements";
 import {
   RibbonTag,
   SquishyButton,
@@ -80,6 +82,7 @@ export function BentoWorkspaceClient({
   teacherWhatsapp,
   todayKey,
   initialStreak,
+  achievements,
   roadmaps,
   initialTasks,
   initialNotes,
@@ -89,6 +92,7 @@ export function BentoWorkspaceClient({
   teacherWhatsapp: string;
   todayKey: string;
   initialStreak: { currentStreak: number; activeToday: boolean };
+  achievements: AchievementBadge[];
   roadmaps: WorkspaceRoadmap[];
   initialTasks: WorkspaceTaskItem[];
   initialNotes: WorkspaceNoteItem[];
@@ -400,6 +404,8 @@ export function BentoWorkspaceClient({
               })}
             </div>
           )}
+
+          <AchievementBadgesCard badges={achievements} compact />
         </div>
 
         {/* Right: Pomodoro, Mini Streak Calendar, To-Do List, My Notes! (4 cols) */}
