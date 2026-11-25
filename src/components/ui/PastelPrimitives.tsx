@@ -3,10 +3,12 @@ import { ChatBubbleIcon } from "@/components/icons/CartoonIcons";
 import { buildTanyaHusbandUrl } from "@/lib/whatsapp";
 
 const TAPE_COLORS = {
-  pink: "bg-[#FFAAA6]/75 -rotate-2",
-  lilac: "bg-[#C8B6FF]/75 rotate-1",
-  yellow: "bg-[#FFF3B0]/90 rotate-2",
-  mint: "bg-[#C6E9EE]/85 -rotate-1",
+  pink: "bg-[#FFAAA6]/75 -rotate-2 border-y border-white/60 shadow-xs",
+  lilac: "bg-[#C8B6FF]/75 rotate-1 border-y border-white/60 shadow-xs",
+  yellow: "bg-[#FFF3B0]/90 rotate-2 border-y border-white/60 shadow-xs",
+  mint: "bg-[#C6E9EE]/85 -rotate-1 border-y border-white/60 shadow-xs",
+  brown:
+    "bg-gradient-to-b from-[#b6895b]/50 via-[#9c6f44]/40 to-[#b6895b]/55 backdrop-blur-[1px] rotate-2 border border-[#7c5634]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.55),0_2px_4px_rgba(74,62,61,0.12)]",
 } as const;
 
 export function WashiCard({
@@ -28,7 +30,7 @@ export function WashiCard({
     >
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute -top-3 left-8 h-5 w-24 rounded-sm shadow-xs border-y border-white/60 ${TAPE_COLORS[tapeColor]}`}
+        className={`pointer-events-none absolute -top-3 left-8 h-5 w-24 rounded-sm ${TAPE_COLORS[tapeColor]}`}
       />
       {(title || badge) && (
         <header className="mb-3 flex flex-wrap items-center justify-between gap-2 min-w-0">
@@ -55,6 +57,8 @@ const BUTTON_VARIANTS = {
   mint: "bg-[#C6E9EE] hover:bg-[#b5e1e8] text-[#001f23] border border-[#aacdd2]",
   butter:
     "bg-[#FFF3B0] hover:bg-[#ffec8c] text-[#4a3e3d] border border-[#f5e184]",
+  white:
+    "bg-white hover:bg-[#fcf9f4] text-[#4a3e3d] border border-[#eadfd5]",
   outline:
     "bg-white hover:bg-[#FFF3B0]/50 text-[#4a3e3d] border-2 border-dashed border-[#8D6E63]",
 } as const;

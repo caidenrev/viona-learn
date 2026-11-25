@@ -445,7 +445,7 @@ export function CourseReaderClient({
           </WashiCard>
 
           <WashiCard
-            tapeColor="yellow"
+            tapeColor="brown"
             title="Catatan Pribadiku"
             className="lined-memo"
           >
@@ -457,7 +457,7 @@ export function CourseReaderClient({
                 placeholder="Catat poin penting modul ini..."
                 className="w-full rounded-2xl bg-white/85 border border-[#e2d38b] p-3 font-[family-name:var(--font-patrick-hand)] text-base"
               />
-              <SquishyButton type="submit" variant="butter" className="w-full">
+              <SquishyButton type="submit" variant="white" className="w-full">
                 Simpan Memo Modul
               </SquishyButton>
               {noteSaved && (
