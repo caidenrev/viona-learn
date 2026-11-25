@@ -43,7 +43,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#fcf9f4] stationery-dots flex items-center justify-center p-4 sm:p-8">
+    <main className="min-h-screen bg-[#fcf9f4] stationery-dots flex items-center justify-center p-4 sm:p-8 overflow-x-hidden">
       <div className="w-full max-w-md">
         <WashiCard
           tapeColor="pink"

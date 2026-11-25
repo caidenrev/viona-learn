@@ -9,6 +9,7 @@ import Youtube from "@tiptap/extension-youtube";
 import { common, createLowlight } from "lowlight";
 import { useRef, useState } from "react";
 import { CalloutExtension } from "@/components/editor/CalloutExtension";
+import { CodePlaygroundExtension } from "@/components/editor/CodePlaygroundExtension";
 
 const lowlight = createLowlight(common);
 
@@ -52,6 +53,7 @@ export function RichTextEditor({
         },
       }),
       CalloutExtension,
+      CodePlaygroundExtension,
     ],
     content: initialContent,
     onUpdate: ({ editor: instance }) => {
@@ -119,6 +121,18 @@ export function RichTextEditor({
       .run();
   }
 
+  function addCodePlayground() {
+    if (!editor) return;
+    editor
+      .chain()
+      .focus()
+      .insertContent([
+        { type: "codePlayground" },
+        { type: "paragraph" },
+      ])
+      .run();
+  }
+
   const btnClass = (active: boolean) =>
     `px-2.5 py-1.5 rounded-xl font-[family-name:var(--font-mali)] text-xs font-bold min-h-[36px] border transition-colors ${
       active
@@ -180,6 +194,9 @@ export function RichTextEditor({
         </button>
         <button type="button" className={btnClass(false)} onClick={addCallout}>
           Callout
+        </button>
+        <button type="button" className={btnClass(false)} onClick={addCodePlayground}>
+          + Playground
         </button>
         <button type="button" className={btnClass(editor.isActive("link"))} onClick={addLink}>
           Link

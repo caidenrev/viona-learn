@@ -78,6 +78,15 @@ describe("Kawaii stationery UI primitives", () => {
           attrs: { language: "tsx" },
           content: [{ type: "text", text: "const [n, setN] = useState(0);" }],
         },
+        {
+          type: "codePlayground",
+          attrs: {
+            title: "Coba Tombol Pastel",
+            html: "<button>Klik Aku</button>",
+            css: "button { background: #FFAAA6; }",
+            js: "console.log('Halo!');",
+          },
+        },
       ],
     };
 
@@ -85,6 +94,8 @@ describe("Kawaii stationery UI primitives", () => {
     expect(html).toContain("Siklus useEffect");
     expect(html).toContain("Catatan Kunci");
     expect(html).toContain("const [n, setN] = useState(0);");
+    expect(html).toContain("Coba Tombol Pastel");
+    expect(html).toContain('sandbox="allow-scripts"');
     expect(findEmojiViolations(html)).toEqual([]);
   });
 });

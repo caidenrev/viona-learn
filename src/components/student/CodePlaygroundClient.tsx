@@ -9,6 +9,7 @@ import {
   WashiCard,
 } from "@/components/ui/PastelPrimitives";
 import { STICKERS } from "@/lib/stickers";
+import { buildPlaygroundSrcDoc } from "@/lib/playground-srcdoc";
 
 const STARTER_HTML = `<div class="kartu">
   <span class="badge">BELAJAR YUK!</span>
@@ -73,42 +74,13 @@ document.getElementById("minus").addEventListener("click", () => {
   console.log("Kurangi:", count);
 });`;
 
-function buildSrcDoc(html: string, css: string, js: string) {
-  const safeJs = js.replace(/<\/script>/gi, "<\\/script>");
-  return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<style>${css}</style>
-</head>
-<body>
-${html}
-<script>
-(function() {
-  const send = (level, args) => {
-    window.parent.postMessage({ source: "viona-playground", level, text: args.map(String).join(" ") }, "*");
-  };
-  const origLog = console.log;
-  console.log = (...args) => { send("LOG", args); origLog(...args); };
-  window.onerror = (msg) => { send("ERROR", [msg]); };
-  try {
-    ${safeJs}
-  } catch (err) {
-    send("ERROR", [err && err.message ? err.message : String(err)]);
-  }
-})();
-</script>
-</body>
-</html>`;
-}
-
 export function CodePlaygroundClient() {
   const [activeTab, setActiveTab] = useState<"html" | "css" | "js">("html");
   const [html, setHtml] = useState(STARTER_HTML);
   const [css, setCss] = useState(STARTER_CSS);
   const [js, setJs] = useState(STARTER_JS);
   const [srcDoc, setSrcDoc] = useState(() =>
-    buildSrcDoc(STARTER_HTML, STARTER_CSS, STARTER_JS)
+    buildPlaygroundSrcDoc(STARTER_HTML, STARTER_CSS, STARTER_JS, "standalone")
   );
   const [previewWidth, setPreviewWidth] = useState<"desktop" | "mobile">("desktop");
   const [logs, setLogs] = useState<Array<{ level: string; text: string }>>([
@@ -117,7 +89,10 @@ export function CodePlaygroundClient() {
 
   useEffect(() => {
     function onMessage(ev: MessageEvent) {
-      if (ev.data?.source === "viona-playground") {
+      if (
+        ev.data?.source === "viona-playground" &&
+        ev.data?.instanceId === "standalone"
+      ) {
         setLogs((prev) => [
           ...prev.slice(-20),
           { level: String(ev.data.level), text: String(ev.data.text) },
@@ -130,14 +105,14 @@ export function CodePlaygroundClient() {
 
   function runCode() {
     setLogs([{ level: "INFO", text: "Menjalankan kode HTML/CSS/JS..." }]);
-    setSrcDoc(buildSrcDoc(html, css, js));
+    setSrcDoc(buildPlaygroundSrcDoc(html, css, js, "standalone"));
   }
 
   function resetStarter() {
     setHtml(STARTER_HTML);
     setCss(STARTER_CSS);
     setJs(STARTER_JS);
-    setSrcDoc(buildSrcDoc(STARTER_HTML, STARTER_CSS, STARTER_JS));
+    setSrcDoc(buildPlaygroundSrcDoc(STARTER_HTML, STARTER_CSS, STARTER_JS, "standalone"));
     setLogs([{ level: "INFO", text: "Kode dikembalikan ke template awal." }]);
   }
 

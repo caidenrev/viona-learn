@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { InlineCodePlayground } from "@/components/playground/InlineCodePlayground";
 
 interface TiptapMark {
   type: string;
@@ -176,6 +177,25 @@ function renderNode(node: TiptapNode, key: number): ReactNode {
             className="w-full h-full"
           />
         </div>
+      );
+    }
+    case "codePlayground": {
+      return (
+        <InlineCodePlayground
+          key={key}
+          title={
+            typeof node.attrs?.title === "string"
+              ? node.attrs.title
+              : "Latihan Koding Interaktif"
+          }
+          initialHtml={
+            typeof node.attrs?.html === "string" ? node.attrs.html : ""
+          }
+          initialCss={
+            typeof node.attrs?.css === "string" ? node.attrs.css : ""
+          }
+          initialJs={typeof node.attrs?.js === "string" ? node.attrs.js : ""}
+        />
       );
     }
     case "horizontalRule":
