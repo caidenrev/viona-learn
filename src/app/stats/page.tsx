@@ -114,7 +114,7 @@ export default async function StatsPage() {
       streakDays={streak.currentStreak}
       userName={user?.nickname || session.name}
       avatarUrl={user?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <div className="space-y-6">
         <WashiCard tapeColor="pink">

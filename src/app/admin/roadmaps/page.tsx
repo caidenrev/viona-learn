@@ -40,7 +40,7 @@ export default async function AdminRoadmapsPage() {
       streakDays={streak.currentStreak}
       userName={teacher?.name || session.name}
       avatarUrl={teacher?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <RoadmapManagerClient
         initialRoadmaps={roadmaps.map((r) => ({

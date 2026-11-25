@@ -136,7 +136,7 @@ export async function seedDatabase(
     create: {
       id: "default",
       teacherWhatsapp,
-      siteTitle: "Belajar Yuk!",
+      siteTitle: "Viona Learn",
     },
   });
 

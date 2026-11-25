@@ -116,7 +116,7 @@ export async function GET() {
     return NextResponse.json({
       user,
       teacherWhatsapp: settings?.teacherWhatsapp ?? "",
-      siteTitle: settings?.siteTitle ?? "Belajar Yuk!",
+      siteTitle: settings?.siteTitle ?? "Viona Learn",
       todayKey,
       streak,
       roadmaps: enrichedRoadmaps,

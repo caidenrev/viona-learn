@@ -58,7 +58,7 @@ export function AppShell({
   streakDays = 0,
   userName,
   avatarUrl,
-  siteTitle = "Belajar Yuk!",
+  siteTitle = "Viona Learn",
   children,
 }: {
   role: "TEACHER" | "STUDENT";

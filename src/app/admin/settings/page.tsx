@@ -34,11 +34,11 @@ export default async function AdminSettingsPage() {
       streakDays={streak.currentStreak}
       userName={teacher?.name || session.name}
       avatarUrl={teacher?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <AdminSettingsClient
         initialWhatsapp={settings?.teacherWhatsapp ?? "6281234567890"}
-        initialSiteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+        initialSiteTitle={settings?.siteTitle ?? "Viona Learn"}
         studentUsername={student?.username ?? "viona"}
       />
     </AppShell>

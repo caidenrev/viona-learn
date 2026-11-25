@@ -52,7 +52,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center text-center mb-6">
             <StickerImage
               src={STICKERS.mascotHirono}
-              alt="Maskot Belajar Yuk"
+              alt="Maskot Viona Learn"
               className="w-24 h-24 sm:w-28 sm:h-28 mb-3"
             />
             <RibbonTag color="butter" className="mb-2">
@@ -60,7 +60,7 @@ export default function LoginPage() {
               <span>BELAJAR YUK!</span>
             </RibbonTag>
             <h1 className="font-[family-name:var(--font-gaegu)] text-3xl sm:text-4xl font-bold text-[#4a3e3d]">
-              Viona Learn Room
+              Viona Learn
             </h1>
             <p className="font-[family-name:var(--font-patrick-hand)] text-base text-[#8d6e63] mt-1">
               Ruang belajar &amp; planner pribadi kita berdua.

@@ -80,7 +80,7 @@ model User {
 model AppSettings {
   id              String   @id @default("default")
   teacherWhatsapp String
-  siteTitle       String   @default("Belajar Yuk!")
+  siteTitle       String   @default("Viona Learn")
   updatedAt       DateTime @updatedAt
 }
 

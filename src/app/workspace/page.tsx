@@ -128,7 +128,7 @@ export default async function WorkspacePage() {
       streakDays={streak.currentStreak}
       userName={user?.nickname || user?.name || session.name}
       avatarUrl={user?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <BentoWorkspaceClient
         userName={user?.nickname || user?.name || session.name}

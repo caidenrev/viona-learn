@@ -67,7 +67,7 @@ export default async function AdminPage() {
       streakDays={streak.currentStreak}
       userName={teacher?.name || session.name}
       avatarUrl={teacher?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <AdminKonsolClient
         studentName={student?.nickname || student?.name || "Siswa"}

@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 const EMOJI_REGEX = /\p{Extended_Pictographic}/u;
 
-test.describe("Viona Learn Room Desktop & Mobile Verification", () => {
+test.describe("Viona Learn Desktop & Mobile Verification", () => {
   test("login page renders zero emojis, loads transparent PNG stickers, and fits mobile 390x844 with zero overflow", async ({
     page,
   }) => {
@@ -10,7 +10,7 @@ test.describe("Viona Learn Room Desktop & Mobile Verification", () => {
     await page.goto("/login");
 
     await expect(
-      page.getByRole("heading", { name: "Viona Learn Room" })
+      page.getByRole("heading", { name: "Viona Learn" })
     ).toBeVisible();
 
     const text = await page.locator("body").innerText();
@@ -29,7 +29,7 @@ test.describe("Viona Learn Room Desktop & Mobile Verification", () => {
     expect(brokenImages).toBe(0);
 
     const mascotHasCircle = await page
-      .getByAltText("Maskot Belajar Yuk")
+      .getByAltText("Maskot Viona Learn")
       .evaluate((el) => el.className.includes("rounded-full"));
     expect(mascotHasCircle).toBe(false);
   });

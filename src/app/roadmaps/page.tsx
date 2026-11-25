@@ -49,7 +49,7 @@ export default async function RoadmapsPage() {
       streakDays={streak.currentStreak}
       userName={user?.nickname || session.name}
       avatarUrl={user?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">

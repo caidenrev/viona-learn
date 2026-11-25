@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Belajar Yuk! - Viona Learn Room",
+  title: "Viona Learn",
   description:
     "Personal pastel stationery LMS and daily study planner for structured learning.",
 };

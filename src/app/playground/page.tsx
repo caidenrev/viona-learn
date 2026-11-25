@@ -31,7 +31,7 @@ export default async function PlaygroundPage() {
       streakDays={streak.currentStreak}
       userName={user?.nickname || session.name}
       avatarUrl={user?.avatarUrl}
-      siteTitle={settings?.siteTitle ?? "Belajar Yuk!"}
+      siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <CodePlaygroundClient />
     </AppShell>

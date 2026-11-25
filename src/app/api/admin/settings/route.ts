@@ -51,7 +51,7 @@ export async function PATCH(req: Request) {
         create: {
           id: "default",
           teacherWhatsapp: parsed.teacherWhatsapp ?? "6281234567890",
-          siteTitle: parsed.siteTitle ?? "Belajar Yuk!",
+          siteTitle: parsed.siteTitle ?? "Viona Learn",
         },
       });
     }
