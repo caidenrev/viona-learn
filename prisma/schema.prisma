@@ -1,0 +1,301 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum CourseProgressStatus {
+  LOCKED
+  UNLOCKED
+  PASSED
+}
+
+enum TaskCategory {
+  STUDY
+  PERSONAL
+}
+
+enum ActivitySource {
+  MODULE
+  QUIZ
+  STUDY_TASK
+  PLAYGROUND
+}
+
+enum NoteColor {
+  PINK
+  BUTTER
+  MINT
+  LAV
+}
+
+enum SubmissionStatus {
+  PENDING
+  REVIEWED
+  REVISION
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  name         String
+  nickname     String?
+  dreamTarget  String?
+  bio          String?
+  focusWindow  String?
+  passwordHash String
+  role         Role     @unique
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  moduleProgresses  ModuleProgress[]
+  quizAttempts      QuizAttempt[]
+  courseProgresses  CourseProgress[]
+  courseRatings     CourseRating[]
+  courseSubmissions CourseSubmission[]
+  workspaceTasks    WorkspaceTask[]
+  notes             Note[]
+  mentorNotes       MentorPrivateNote[]
+  dailyActivities   DailyActivity[]
+  dailyActivityLogs DailyActivityLog[]
+}
+
+model AppSettings {
+  id              String   @id @default("default")
+  teacherWhatsapp String
+  siteTitle       String   @default("Belajar Yuk!")
+  updatedAt       DateTime @updatedAt
+}
+
+model Roadmap {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String
+  levelLabel  String        @default("Dasar - Mahir")
+  targetDate  DateTime?
+  status      PublishStatus @default(DRAFT)
+  orderIndex  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  courses Course[]
+}
+
+model Course {
+  id              String        @id @default(cuid())
+  roadmapId       String
+  roadmap         Roadmap       @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  title           String
+  slug            String        @unique
+  summary         String
+  thumbnailUrl    String?
+  targetDate      DateTime?
+  status          PublishStatus @default(DRAFT)
+  orderIndex      Int           @default(0)
+  passingScore    Int           @default(70)
+  hasPracticeTask Boolean       @default(false)
+  practicePrompt  String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  modules           Module[]
+  quizQuestions     QuizQuestion[]
+  quizAttempts      QuizAttempt[]
+  courseProgresses  CourseProgress[]
+  courseRatings     CourseRating[]
+  courseSubmissions CourseSubmission[]
+  workspaceTasks    WorkspaceTask[]
+  notes             Note[]
+
+  @@index([roadmapId, orderIndex])
+}
+
+model Module {
+  id               String        @id @default(cuid())
+  courseId         String
+  course           Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapterTitle     String        @default("Bab 1")
+  title            String
+  orderIndex       Int           @default(0)
+  contentJson      Json
+  videoUrl         String?
+  attachments      Json?
+  estimatedMinutes Int           @default(10)
+  status           PublishStatus @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  progresses     ModuleProgress[]
+  workspaceTasks WorkspaceTask[]
+
+  @@index([courseId, orderIndex])
+}
+
+model QuizQuestion {
+  id              String  @id @default(cuid())
+  courseId        String
+  course          Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  prompt          String
+  options         Json
+  correctOptionId String
+  explanation     String?
+  orderIndex      Int     @default(0)
+
+  @@index([courseId, orderIndex])
+}
+
+model ModuleProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  completedAt DateTime @default(now())
+
+  @@unique([userId, moduleId])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  answers   Json
+  score     Int
+  passed    Boolean
+  createdAt DateTime @default(now())
+
+  @@index([userId, courseId])
+}
+
+model CourseProgress {
+  id        String               @id @default(cuid())
+  userId    String
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course               @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status    CourseProgressStatus @default(LOCKED)
+  bestScore Int                  @default(0)
+  passedAt  DateTime?
+
+  @@unique([userId, courseId])
+}
+
+model CourseRating {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  stars     Int
+  review    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model CourseSubmission {
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId       String
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  repoUrl        String?
+  demoUrl        String?
+  studentNote    String?
+  status         SubmissionStatus @default(PENDING)
+  score          Int?
+  rubricJson     Json?
+  mentorFeedback String?
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model WorkspaceTask {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  dueDate     DateTime?
+  isTodayGoal Boolean      @default(false)
+  completed   Boolean      @default(false)
+  completedAt DateTime?
+  category    TaskCategory @default(STUDY)
+  courseId    String?
+  course      Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  moduleId    String?
+  module      Module?      @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([userId, dueDate])
+}
+
+model Note {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  tags      String[]
+  checklist Json?
+  dateKey   String?
+  courseId  String?
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  color     NoteColor @default(PINK)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId, updatedAt])
+}
+
+model MentorPrivateNote {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyActivity {
+  id            String @id @default(cuid())
+  userId        String
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateKey       String
+  activityCount Int    @default(0)
+  studyMinutes  Int    @default(0)
+
+  @@unique([userId, dateKey])
+}
+
+model DailyActivityLog {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateKey    String
+  sourceType ActivitySource
+  sourceId   String
+  createdAt  DateTime       @default(now())
+
+  @@unique([userId, dateKey, sourceType, sourceId])
+}
