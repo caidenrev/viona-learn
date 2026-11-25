@@ -1,10 +1,21 @@
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import fs from "node:fs";
+import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   ensureSupabaseAuthUser,
   isSupabaseAuthConfigured,
 } from "../src/lib/supabase";
+
+function loadLocalEnvFiles() {
+  for (const name of [".env", ".env.local"]) {
+    const filePath = path.join(process.cwd(), name);
+    if (fs.existsSync(filePath) && typeof process.loadEnvFile === "function") {
+      process.loadEnvFile(filePath);
+    }
+  }
+}
 
 export interface SeedEnv {
   SEED_TEACHER_USERNAME?: string;
@@ -267,6 +278,7 @@ const isDirectExecution =
   import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isDirectExecution) {
+  loadLocalEnvFiles();
   const client = new PrismaClient();
   seedDatabase(client)
     .then(async () => {

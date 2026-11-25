@@ -1,23 +1,31 @@
 import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
+function getSupabaseUrl(): string | undefined {
+  return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+}
+
+function getSupabaseAnonKey(): string | undefined {
+  return (
+    process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
+
 export function isSupabaseAuthConfigured(): boolean {
   return Boolean(
-    process.env.SUPABASE_URL &&
-      process.env.SUPABASE_ANON_KEY &&
+    getSupabaseUrl() &&
+      getSupabaseAnonKey() &&
       process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 }
 
 export function isSupabaseStorageConfigured(): boolean {
-  return Boolean(
-    process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
+  return Boolean(getSupabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
 export function getSupabaseAnonClient() {
-  const url = process.env.SUPABASE_URL;
-  const anonKey = process.env.SUPABASE_ANON_KEY;
+  const url = getSupabaseUrl();
+  const anonKey = getSupabaseAnonKey();
   if (!url || !anonKey) {
     throw new Error("SUPABASE_URL and SUPABASE_ANON_KEY must be configured.");
   }
@@ -27,7 +35,7 @@ export function getSupabaseAnonClient() {
 }
 
 export function getSupabaseAdminClient() {
-  const url = process.env.SUPABASE_URL;
+  const url = getSupabaseUrl();
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     throw new Error(
