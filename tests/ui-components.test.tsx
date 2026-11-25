@@ -49,6 +49,7 @@ describe("Kawaii stationery UI primitives", () => {
       </AppShell>
     );
     expect(html).toContain('aria-label="Navigasi Mobile"');
+    expect(html).toContain("pointer-events-auto w-full max-w-md rounded-full");
     expect(html).toContain("/workspace");
     expect(html).toContain("/notes");
     expect(html).toContain("/playground");

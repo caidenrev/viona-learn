@@ -140,9 +140,9 @@ export function AppShell({
 
       <nav
         aria-label="Navigasi Mobile"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-t-2 border-dashed border-[#eadfd5] px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]"
+        className="md:hidden fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 px-3 pointer-events-none flex justify-center"
       >
-        <div className="flex items-center justify-around gap-1">
+        <div className="pointer-events-auto w-full max-w-md rounded-full bg-[#ffffff]/95 backdrop-blur-md border-2 border-dashed border-[#eadfd5] shadow-[0_0_0_3px_rgba(255,255,255,0.85),0_10px_24px_rgba(141,110,99,0.16)] p-1.5 flex items-center justify-around gap-1">
           {navItems.map((item) => {
             const active =
               activePath === item.href ||
@@ -151,10 +151,10 @@ export function AppShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex-1 min-w-0 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1 font-[family-name:var(--font-mali)] text-[11px] font-bold ${
+                className={`flex-1 min-w-0 min-h-[44px] flex flex-col items-center justify-center gap-0.5 rounded-full px-1.5 py-1 font-[family-name:var(--font-mali)] text-[11px] font-bold transition-all active:scale-95 ${
                   active
-                    ? "bg-[#ffdad8] text-[#7a3c3a]"
-                    : "text-[#534342]"
+                    ? "bg-[#ffdad8] text-[#7a3c3a] shadow-xs"
+                    : "text-[#534342] hover:bg-[#f6f3ee]"
                 }`}
               >
                 {renderNavIcon(item.icon)}
