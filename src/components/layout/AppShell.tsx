@@ -11,6 +11,7 @@ import {
   SparkleIcon,
 } from "@/components/icons/CartoonIcons";
 import { STICKERS } from "@/lib/stickers";
+import { VionaLogo } from "@/components/icons/VionaLogo";
 
 interface NavItem {
   href: string;
@@ -79,7 +80,7 @@ export function AppShell({
             href={role === "TEACHER" ? "/admin" : "/workspace"}
             className="flex items-center gap-2 min-w-0 shrink"
           >
-            <BookStackIcon className="w-6 h-6 text-[#8e4b49] shrink-0" />
+            <VionaLogo className="w-7 h-7 shrink-0" />
             <span className="font-[family-name:var(--font-gaegu)] text-xl sm:text-2xl font-bold text-[#8e4b49] tracking-tight truncate">
               {siteTitle}
             </span>

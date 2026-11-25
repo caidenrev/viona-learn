@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-v-clr">
+  <title id="title-v-clr">Viona Learn logo</title>
+  <!-- Red pencil eraser cap (tumpul rounded top) -->
+  <path fill="#E05252" stroke="#4A3E3D" stroke-width="6" stroke-linejoin="round" d="M 31.0 75.0 A 22 22 0 0 1 69.1 53.0 L 78.1 68.6 L 40.0 90.6 Z"/>
+  <!-- Silver metal ferrule band between eraser and barrel -->
+  <path fill="#D6D1CB" stroke="#4A3E3D" stroke-width="6" stroke-linejoin="round" d="M 40.0 90.6 L 78.1 68.6 L 83.1 77.2 L 45.0 99.2 Z"/>
+  <!-- Classic golden-yellow pencil barrel with rounded bottom -->
+  <path fill="#F4B41A" stroke="#4A3E3D" stroke-width="6" stroke-linejoin="round" d="M 45.0 99.2 L 83.1 77.2 L 143.1 181.2 A 22 22 0 0 1 105.0 203.2 Z"/>
+  <!-- White stationery ruler with notches and crisp cocoa outline -->
+  <path fill="#FFFFFF" stroke="#4A3E3D" stroke-width="6" stroke-linejoin="round" d="M 187.0 53.0 A 22 22 0 0 1 225.1 75.0 L 211.1 99.2 L 199.8 92.7 L 195.3 100.5 L 206.6 107.0 L 197.1 123.5 L 185.8 117.0 L 181.3 124.8 L 192.6 131.3 L 183.1 147.7 L 171.8 141.2 L 167.3 149.0 L 178.6 155.5 L 160.4 187.1 L 135.0 143.1 Z"/>
+</svg>

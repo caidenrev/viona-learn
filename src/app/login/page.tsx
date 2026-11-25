@@ -9,6 +9,7 @@ import {
   WashiCard,
 } from "@/components/ui/PastelPrimitives";
 import { BookStackIcon, SparkleIcon } from "@/components/icons/CartoonIcons";
+import { VionaLogo } from "@/components/icons/VionaLogo";
 import { STICKERS } from "@/lib/stickers";
 
 export default function LoginPage() {
@@ -59,8 +60,9 @@ export default function LoginPage() {
               <SparkleIcon className="w-3.5 h-3.5" />
               <span>BELAJAR YUK!</span>
             </RibbonTag>
-            <h1 className="font-[family-name:var(--font-gaegu)] text-3xl sm:text-4xl font-bold text-[#4a3e3d]">
-              Viona Learn
+            <h1 className="font-[family-name:var(--font-gaegu)] text-3xl sm:text-4xl font-bold text-[#4a3e3d] inline-flex items-center justify-center gap-2">
+              <VionaLogo className="w-8 h-8 shrink-0" />
+              <span>Viona Learn</span>
             </h1>
             <p className="font-[family-name:var(--font-patrick-hand)] text-base text-[#8d6e63] mt-1">
               Ruang belajar &amp; planner pribadi kita berdua.
