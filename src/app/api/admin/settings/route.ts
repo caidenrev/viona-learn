@@ -3,6 +3,10 @@ import { z } from "zod";
 import { hashPassword, requireRole } from "@/lib/auth";
 import { handleApiError } from "@/lib/api-helpers";
 import { prisma } from "@/lib/prisma";
+import {
+  isSupabaseAuthConfigured,
+  updateSupabasePassword,
+} from "@/lib/supabase";
 
 const patchSettingsSchema = z.object({
   teacherWhatsapp: z.string().trim().min(6).optional(),
@@ -53,13 +57,26 @@ export async function PATCH(req: Request) {
     }
 
     if (parsed.resetStudentPassword) {
+      const student = await prisma.user.findUnique({
+        where: { role: "STUDENT" },
+        select: { id: true, supabaseAuthId: true },
+      });
+      if (student && isSupabaseAuthConfigured() && student.supabaseAuthId) {
+        await updateSupabasePassword(
+          student.supabaseAuthId,
+          parsed.resetStudentPassword
+        );
+      }
       await prisma.user.update({
         where: { role: "STUDENT" },
         data: { passwordHash: await hashPassword(parsed.resetStudentPassword) },
       });
     }
 
-    return NextResponse.json({ settings, passwordReset: Boolean(parsed.resetStudentPassword) });
+    return NextResponse.json({
+      settings,
+      passwordReset: Boolean(parsed.resetStudentPassword),
+    });
   } catch (err) {
     return handleApiError(err);
   }

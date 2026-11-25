@@ -75,7 +75,7 @@ export default function LoginPage() {
                 htmlFor="username"
                 className="block font-[family-name:var(--font-mali)] text-xs font-bold uppercase tracking-wider text-[#534342] mb-1.5"
               >
-                Username
+                Username atau Email
               </label>
               <input
                 id="username"
@@ -84,7 +84,7 @@ export default function LoginPage() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Masukkan username..."
+                placeholder="Masukkan username atau email..."
                 className="w-full min-h-[44px] rounded-2xl bg-[#faf7f2] border-2 border-[#eadfd5] focus:border-[#C8B6FF] focus:outline-none px-4 py-2.5 font-[family-name:var(--font-patrick-hand)] text-lg text-[#4a3e3d]"
               />
             </div>

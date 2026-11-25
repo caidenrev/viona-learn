@@ -1,41 +1,76 @@
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { pathToFileURL } from "node:url";
+import {
+  ensureSupabaseAuthUser,
+  isSupabaseAuthConfigured,
+} from "../src/lib/supabase";
 
 export interface SeedEnv {
   SEED_TEACHER_USERNAME?: string;
+  SEED_TEACHER_EMAIL?: string;
   SEED_TEACHER_PASSWORD?: string;
   SEED_STUDENT_USERNAME?: string;
+  SEED_STUDENT_EMAIL?: string;
   SEED_STUDENT_PASSWORD?: string;
   SEED_TEACHER_WHATSAPP?: string;
 }
 
 /**
- * Idempotently provisions the closed 2-account setup, AppSettings, and a starter Roadmap.
- * Never overwrites existing user passwords on subsequent runs.
+ * Idempotently provisions the closed 2-account setup (in Prisma + Supabase Auth),
+ * AppSettings, and a starter Roadmap. Never overwrites existing passwords on re-run.
  */
 export async function seedDatabase(
   db: PrismaClient,
   env: SeedEnv = process.env as SeedEnv
 ): Promise<void> {
   const teacherUsername = env.SEED_TEACHER_USERNAME ?? "mentor";
+  const teacherEmail = env.SEED_TEACHER_EMAIL ?? "mentor@viona-learn.local";
   const teacherPassword = env.SEED_TEACHER_PASSWORD ?? "change-me-teacher";
   const studentUsername = env.SEED_STUDENT_USERNAME ?? "viona";
+  const studentEmail = env.SEED_STUDENT_EMAIL ?? "viona@viona-learn.local";
   const studentPassword = env.SEED_STUDENT_PASSWORD ?? "change-me-student";
   const teacherWhatsapp = env.SEED_TEACHER_WHATSAPP ?? "6281234567890";
+
+  const useSupabaseAuth = isSupabaseAuthConfigured();
 
   const existingTeacher = await db.user.findUnique({
     where: { role: Role.TEACHER },
   });
   if (!existingTeacher) {
+    const supabaseAuthId = useSupabaseAuth
+      ? await ensureSupabaseAuthUser({
+          email: teacherEmail,
+          password: teacherPassword,
+          role: "TEACHER",
+          name: "Husband Mentor",
+        })
+      : null;
+
     await db.user.create({
       data: {
         username: teacherUsername,
+        email: teacherEmail,
+        supabaseAuthId,
         name: "Husband Mentor",
         nickname: "Mentor",
         passwordHash: await bcrypt.hash(teacherPassword, 10),
         role: Role.TEACHER,
         avatarUrl: "/stickers/mentor-bear-desk.png",
+      },
+    });
+  } else if (useSupabaseAuth && !existingTeacher.supabaseAuthId) {
+    const supabaseAuthId = await ensureSupabaseAuthUser({
+      email: existingTeacher.email ?? teacherEmail,
+      password: teacherPassword,
+      role: "TEACHER",
+      name: existingTeacher.name,
+    });
+    await db.user.update({
+      where: { id: existingTeacher.id },
+      data: {
+        email: existingTeacher.email ?? teacherEmail,
+        supabaseAuthId,
       },
     });
   }
@@ -44,9 +79,20 @@ export async function seedDatabase(
     where: { role: Role.STUDENT },
   });
   if (!existingStudent) {
+    const supabaseAuthId = useSupabaseAuth
+      ? await ensureSupabaseAuthUser({
+          email: studentEmail,
+          password: studentPassword,
+          role: "STUDENT",
+          name: "Viona",
+        })
+      : null;
+
     await db.user.create({
       data: {
         username: studentUsername,
+        email: studentEmail,
+        supabaseAuthId,
         name: "Viona",
         nickname: "Viona",
         dreamTarget: "Fullstack & AI App Builder",
@@ -55,6 +101,20 @@ export async function seedDatabase(
         passwordHash: await bcrypt.hash(studentPassword, 10),
         role: Role.STUDENT,
         avatarUrl: "/stickers/hirono.png",
+      },
+    });
+  } else if (useSupabaseAuth && !existingStudent.supabaseAuthId) {
+    const supabaseAuthId = await ensureSupabaseAuthUser({
+      email: existingStudent.email ?? studentEmail,
+      password: studentPassword,
+      role: "STUDENT",
+      name: existingStudent.name,
+    });
+    await db.user.update({
+      where: { id: existingStudent.id },
+      data: {
+        email: existingStudent.email ?? studentEmail,
+        supabaseAuthId,
       },
     });
   }

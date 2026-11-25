@@ -1,6 +1,10 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import {
+  isSupabaseStorageConfigured,
+  uploadToSupabaseStorage,
+} from "@/lib/supabase";
 
 const DEFAULT_MAX_BYTES = 5 * 1024 * 1024;
 
@@ -88,11 +92,21 @@ export function validateImageBuffer(input: {
 }
 
 /**
- * Saves a validated image upload under public/uploads/ for local/dev serving.
+ * Saves a validated image upload to Supabase Storage when configured,
+ * falling back to local public/uploads/ for local/offline dev.
  */
 export async function saveUploadedImage(file: File): Promise<{ url: string }> {
   const bytes = new Uint8Array(await file.arrayBuffer());
   const { ext } = validateImageBuffer({ bytes, mimeType: file.type });
+
+  if (isSupabaseStorageConfigured()) {
+    return uploadToSupabaseStorage({
+      bytes,
+      ext,
+      mimeType: file.type,
+    });
+  }
+
   const fileName = `${crypto.randomUUID()}.${ext}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads");
   await fs.mkdir(uploadDir, { recursive: true });

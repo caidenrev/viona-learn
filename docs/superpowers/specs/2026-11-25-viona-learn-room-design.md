@@ -72,7 +72,12 @@ Stitch HTML exports were desktop-focused (`hidden md:flex` on `<nav>`) and had m
 5. **Upload Safety:** `POST /api/admin/upload` validates MIME + magic bytes (`png`, `jpeg`, `webp`) and enforces `<= 5 MB`.
 6. **Playground Sandbox:** `/playground` runs strictly in a client `<iframe sandbox="allow-scripts">`; zero server code execution.
 
-## 6. Data Model (`prisma/schema.prisma`)
+## 6. Data Model & Supabase Infrastructure
+
+- **Database, Auth & Storage (Supabase):**
+  - **Database:** Supabase PostgreSQL accessed via Prisma (`DATABASE_URL` transaction pooler + `DIRECT_URL` direct connection).
+  - **Auth:** Closed 2-account `TEACHER` and `STUDENT` login backed by Supabase Auth (`signInWithPassword` + admin user provisioning in `prisma/seed.ts`, no public signup/OAuth) paired with signed HTTP-only `viona_session` cookies for Edge middleware role checks.
+  - **Storage:** Validated image uploads (`<= 5 MB`, MIME + magic bytes) stored in Supabase Storage (`SUPABASE_STORAGE_BUCKET`, default `"viona-media"`), with automatic fallback to `public/uploads/` when Supabase Storage env vars are unset in local/offline tests.
 
 - **Enums:** `Role` (`TEACHER`, `STUDENT`), `PublishStatus` (`DRAFT`, `PUBLISHED`), `CourseProgressStatus` (`LOCKED`, `UNLOCKED`, `PASSED`), `TaskCategory` (`STUDY`, `PERSONAL`), `ActivitySource` (`MODULE`, `QUIZ`, `STUDY_TASK`, `PLAYGROUND`), `NoteColor` (`PINK`, `BUTTER`, `MINT`, `LAV`), `SubmissionStatus` (`PENDING`, `REVIEWED`, `REVISION`).
 - **Models:**

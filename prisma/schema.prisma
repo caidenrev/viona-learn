@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -49,9 +50,11 @@ enum SubmissionStatus {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  username     String   @unique
-  name         String
+  id             String   @id @default(cuid())
+  username       String   @unique
+  email          String?  @unique
+  supabaseAuthId String?  @unique
+  name           String
   nickname     String?
   dreamTarget  String?
   bio          String?

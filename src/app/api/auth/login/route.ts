@@ -6,6 +6,10 @@ import {
   signSessionToken,
   verifyPassword,
 } from "@/lib/auth";
+import {
+  isSupabaseAuthConfigured,
+  verifySupabasePassword,
+} from "@/lib/supabase";
 
 const loginSchema = z.object({
   username: z.string().trim().min(1),
@@ -23,8 +27,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { username: parsed.data.username },
+    const identifier = parsed.data.username;
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ username: identifier }, { email: identifier }],
+      },
     });
     if (!user) {
       return NextResponse.json(
@@ -33,7 +40,23 @@ export async function POST(req: Request) {
       );
     }
 
-    const valid = await verifyPassword(parsed.data.password, user.passwordHash);
+    let valid = false;
+    if (isSupabaseAuthConfigured() && user.email) {
+      const sbResult = await verifySupabasePassword(
+        user.email,
+        parsed.data.password
+      );
+      valid = sbResult.ok;
+      if (sbResult.ok && !user.supabaseAuthId) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { supabaseAuthId: sbResult.supabaseAuthId },
+        });
+      }
+    } else {
+      valid = await verifyPassword(parsed.data.password, user.passwordHash);
+    }
+
     if (!valid) {
       return NextResponse.json(
         { error: "Username atau kata sandi salah." },

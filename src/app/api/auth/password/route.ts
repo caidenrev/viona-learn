@@ -7,6 +7,11 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  isSupabaseAuthConfigured,
+  updateSupabasePassword,
+  verifySupabasePassword,
+} from "@/lib/supabase";
 
 const passwordSchema = z.object({
   currentPassword: z.string().min(1),
@@ -32,15 +37,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Akun tidak ditemukan." }, { status: 404 });
     }
 
-    const valid = await verifyPassword(
-      parsed.data.currentPassword,
-      user.passwordHash
-    );
+    let valid = false;
+    if (isSupabaseAuthConfigured() && user.email && user.supabaseAuthId) {
+      const sbCheck = await verifySupabasePassword(
+        user.email,
+        parsed.data.currentPassword
+      );
+      valid = sbCheck.ok;
+    } else {
+      valid = await verifyPassword(
+        parsed.data.currentPassword,
+        user.passwordHash
+      );
+    }
+
     if (!valid) {
       return NextResponse.json(
         { error: "Kata sandi saat ini tidak sesuai." },
         { status: 400 }
       );
+    }
+
+    if (isSupabaseAuthConfigured() && user.supabaseAuthId) {
+      await updateSupabasePassword(user.supabaseAuthId, parsed.data.newPassword);
     }
 
     await prisma.user.update({
