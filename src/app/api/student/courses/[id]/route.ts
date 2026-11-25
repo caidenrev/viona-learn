@@ -6,15 +6,15 @@ import { getPublishedRoadmapCourseStates } from "@/lib/student-course-access";
 
 export async function GET(
   _req: Request,
-  context: { params: Promise<{ slug: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const student = await requireRole("STUDENT");
-    const { slug } = await context.params;
+    const { id: idOrSlug } = await context.params;
 
     const course = await prisma.course.findFirst({
       where: {
-        slug,
+        OR: [{ id: idOrSlug }, { slug: idOrSlug }],
         status: "PUBLISHED",
         roadmap: { status: "PUBLISHED" },
       },

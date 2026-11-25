@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #fcf9f4;
+  --color-milk-ivory: #faf7f2;
+  --color-surface-low: #f6f3ee;
+  --color-surface-container: #f0ede9;
+  --color-surface-high: #ebe8e3;
+  --color-surface-lowest: #ffffff;
+  --color-cocoa-ink: #4a3e3d;
+  --color-on-surface-variant: #534342;
+  --color-soft-latte: #8d6e63;
+  --color-sakura-pink: #ffaaa6;
+  --color-sakura-deep: #8e4b49;
+  --color-primary-fixed: #ffdad8;
+  --color-pastel-lilac: #c8b6ff;
+  --color-lilac-deep: #645495;
+  --color-secondary-fixed: #e8ddff;
+  --color-butter-yellow: #fff3b0;
+  --color-mint-fixed: #c6e9ee;
+  --color-mint-deep: #436468;
+  --color-sticker-stroke: #eadfd5;
+
+  --font-display: var(--font-gaegu), cursive, sans-serif;
+  --font-label: var(--font-mali), cursive, sans-serif;
+  --font-body: var(--font-patrick-hand), cursive, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
+@layer base {
+  html,
+  body {
+    background-color: #fcf9f4;
+    color: #4a3e3d;
+    font-family: var(--font-patrick-hand), cursive, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+.sticker-card {
+  background-color: #ffffff;
+  border: 2px dashed #eadfd5;
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 6px 18px rgba(141, 110, 99, 0.09);
+}
+
+.lined-memo {
+  background-color: #fff3b0;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(141, 110, 99, 0.16) 28px
+  );
+  line-height: 28px;
+}
+
+.squishy-btn {
+  border-bottom: 3px solid rgba(74, 62, 61, 0.25);
+  transition: transform 0.12s ease, border-bottom-width 0.12s ease, background-color 0.15s ease;
+}
+
+.squishy-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+
+.stationery-dots {
+  background-image: radial-gradient(#8d6e63 0.75px, transparent 0.75px);
+  background-size: 18px 18px;
+}

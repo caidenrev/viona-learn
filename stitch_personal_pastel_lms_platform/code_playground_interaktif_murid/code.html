@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<title>Code Playground Siswa - Belajar Yuk!</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&amp;family=Mali:wght@400;600;700&amp;family=Patrick+Hand&amp;family=Fira+Code:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        overscroll-behavior: none;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    /* Monospace syntax font */
+    .font-code {
+      font-family: 'Fira Code', 'Courier New', monospace;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8e4b49",
+            "primary-container": "#ffaaa6",
+            "primary-fixed": "#ffdad8",
+            "primary-fixed-dim": "#ffb3af",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#3a0a0b",
+            "secondary": "#645495",
+            "secondary-container": "#c8b6ff",
+            "secondary-fixed": "#e8ddff",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#200d4e",
+            "surface": "#fcf9f4",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f6f3ee",
+            "surface-container": "#f0ede9",
+            "surface-container-high": "#ebe8e3",
+            "surface-container-highest": "#e5e2dd",
+            "on-surface": "#1c1c19",
+            "on-surface-variant": "#534342",
+            "outline": "#857371",
+            "outline-variant": "#d8c1c0",
+            "butter-yellow": "#FFF3B0",
+            "sakura-pink": "#FFAAA6",
+            "sakura-deep": "#8E4B49",
+            "pastel-lilac": "#C8B6FF",
+            "soft-latte": "#8D6E63",
+            "cocoa-ink": "#4A3E3D",
+            "milk-ivory": "#FAF7F2",
+            "error": "#ba1a1a"
+          },
+          fontFamily: {
+            "headline-lg": ["Gaegu", "sans-serif"],
+            "headline-md": ["Gaegu", "sans-serif"],
+            "headline-sm": ["Gaegu", "sans-serif"],
+            "title-md": ["Mali", "sans-serif"],
+            "title-sm": ["Mali", "sans-serif"],
+            "label-lg": ["Mali", "sans-serif"],
+            "label-md": ["Mali", "sans-serif"],
+            "label-sm": ["Mali", "sans-serif"],
+            "body-lg": ["Patrick Hand", "cursive"],
+            "body-md": ["Patrick Hand", "cursive"],
+            "body-sm": ["Patrick Hand", "cursive"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.25rem"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
+<!-- Header Navigasi Atas -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_2px_10px_rgba(141,110,99,0.06)] border-b border-surface-container-highest/60">
+<div class="h-16 max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
+<a class="flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-primary text-[28px] transition-transform group-hover:scale-110">auto_stories</span>
+<span class="font-headline-md text-2xl font-bold text-primary tracking-tight">Belajar Yuk!</span>
+</a>
+<nav class="hidden lg:flex items-center gap-1.5">
+<a class="font-label-md text-on-surface-variant hover:text-on-surface px-4 py-1.5 rounded-full transition-colors" href="#">Dashboard &amp; Roadmap</a>
+<a class="font-label-md text-on-surface-variant hover:text-on-surface px-4 py-1.5 rounded-full transition-colors" href="#">Materi Belajar</a>
+<a class="font-label-md text-on-surface-variant hover:text-on-surface px-4 py-1.5 rounded-full transition-colors" href="#">Catatan &amp; Tugas</a>
+<a aria-current="page" class="font-label-md bg-primary-container text-on-primary-fixed font-bold rounded-full px-4 py-1.5 shadow-sm" href="#">Code Playground</a>
+<a class="font-label-md text-on-surface-variant hover:text-on-surface px-4 py-1.5 rounded-full transition-colors" href="#">Statistik</a>
+<a class="font-label-md text-on-surface-variant hover:text-on-surface px-4 py-1.5 rounded-full transition-colors" href="#">Pengaturan</a>
+</nav>
+<div class="flex items-center gap-3">
+<div class="bg-butter-yellow text-cocoa-ink px-3 py-1 rounded-full flex items-center gap-1.5 font-label-md shadow-xs border border-amber-200/50">
+<span class="material-symbols-outlined text-[17px] text-primary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-bold">7 Hari</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-xs cursor-pointer hover:ring-2 hover:ring-sakura-pink transition-all">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Body -->
+<main class="w-full pt-20 pb-10 bg-surface flex-grow">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 w-full">
+<!-- Breadcrumb & Control Card -->
+<div class="relative bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container-high p-5 md:p-6 mb-6">
+<!-- Cute Washi Tape Accents -->
+<div class="absolute -top-3 left-10 w-28 h-6 bg-butter-yellow/85 rounded-sm shadow-xs rotate-[-2deg] pointer-events-none flex items-center justify-center border-t border-b border-soft-latte/15">
+<span class="w-full h-0.5 bg-soft-latte/10"></span>
+</div>
+<div class="absolute -top-3 right-12 w-28 h-6 bg-secondary-container/80 rounded-sm shadow-xs rotate-[2deg] pointer-events-none flex items-center justify-center border-t border-b border-soft-latte/15">
+<span class="w-full h-0.5 bg-soft-latte/10"></span>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+<!-- Title & Breadcrumb -->
+<div>
+<div class="flex flex-wrap items-center gap-1.5 text-on-surface-variant font-label-md mb-1.5">
+<span class="material-symbols-outlined text-soft-latte text-[17px]">menu_book</span>
+<span>Belajar Yuk!</span>
+<span class="material-symbols-outlined text-outline-variant text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Code Playground Siswa</span>
+<span class="material-symbols-outlined text-outline-variant text-[14px]">chevron_right</span>
+<span class="bg-primary-fixed text-on-primary-fixed px-2.5 py-0.5 rounded-full text-[11px] font-title-sm font-semibold">Edisi Interaktif Dicoding</span>
+</div>
+<h1 class="font-headline-lg text-3xl md:text-4xl text-cocoa-ink tracking-tight flex items-center gap-2.5 font-bold">
+<span>Playground Koding Interaktif</span>
+<span class="material-symbols-outlined text-sakura-pink text-[30px]" style="font-variation-settings: 'FILL' 1;">draw</span>
+</h1>
+<p class="font-body-lg text-lg text-on-surface-variant mt-1">
+              Tulis kode HTML, CSS, dan JavaScript langsung di lembar kerja jurnal kodingmu!
+            </p>
+</div>
+<!-- Controls & Run Button -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container text-on-surface-variant font-label-sm shadow-xs border border-surface-container-highest">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-medium" id="save-status">Tersimpan di Binder</span>
+</div>
+<!-- Challenge Selector -->
+<div class="relative inline-flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-secondary text-[18px]">bookmark</span>
+<select class="pl-9 pr-9 py-2 rounded-xl bg-secondary-fixed/60 hover:bg-secondary-fixed text-on-secondary-fixed font-title-sm shadow-xs border border-secondary-container appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary/40 transition-colors" id="challenge-select">
+<option value="cat-counter">Tantangan 01: Counter Kucing Pastel</option>
+<option value="name-card">Tantangan 02: Kartu Nama Stationery</option>
+<option value="washi-todo">Tantangan 03: Todo List Washi Tape</option>
+<option value="scratchpad">Kanvas Kosong (Scratchpad Bebas)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 pointer-events-none text-secondary text-[20px]">arrow_drop_down</span>
+</div>
+<!-- Run Button -->
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sakura-pink hover:bg-primary-container text-cocoa-ink font-title-sm font-bold shadow-[0_3px_8px_rgba(141,110,99,0.18)] transition-all active:translate-y-0.5 cursor-pointer border-b-2 border-primary/40" id="run-btn">
+<span class="material-symbols-outlined text-[20px] text-primary" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span>Jalankan Kode</span>
+<span class="text-xs opacity-75 font-body-sm font-normal">(Ctrl + Enter)</span>
+</button>
+</div>
+</div>
+<!-- Quick Actions Ribbon -->
+<div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-surface-container-high bg-surface-container-low/50 px-3.5 py-2 rounded-xl">
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-cocoa-ink font-label-sm shadow-xs transition-colors border border-surface-container-highest" id="format-btn">
+<span class="material-symbols-outlined text-[15px]">code</span>
+<span>Rapikan Kode</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-cocoa-ink font-label-sm shadow-xs transition-colors border border-surface-container-highest" id="copy-btn">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+<span>Salin</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest hover:bg-red-50 text-on-surface-variant hover:text-error font-label-sm shadow-xs transition-colors border border-surface-container-highest" id="reset-btn">
+<span class="material-symbols-outlined text-[15px]">restart_alt</span>
+<span>Reset Awal</span>
+</button>
+</div>
+<div class="text-on-surface-variant font-label-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[17px] text-soft-latte">magic_button</span>
+<span>Shortcut: Tekan <kbd class="px-1.5 py-0.5 rounded bg-surface-container-highest text-cocoa-ink font-mono text-[11px] border border-outline-variant/40">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-surface-container-highest text-cocoa-ink font-mono text-[11px] border border-outline-variant/40">Enter</kbd> untuk Run</span>
+</div>
+</div>
+</div>
+<!-- Studio Workspace Grid: Notebook Editor (Left) & Preview + Console (Right) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN: Buku Tulis Editor (lg:col-span-6) -->
+<div class="lg:col-span-6 flex flex-col bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container-high overflow-hidden">
+<!-- Binder Ring Metaphor Bar -->
+<div class="bg-surface-container px-4 py-2.5 flex items-center justify-between border-b border-surface-container-highest">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-soft-latte/40 shadow-inner"></span>
+<span class="w-3 h-3 rounded-full bg-soft-latte/40 shadow-inner"></span>
+<span class="w-3 h-3 rounded-full bg-soft-latte/40 shadow-inner"></span>
+<span class="font-headline-sm text-lg font-bold text-cocoa-ink ml-1 tracking-tight">Buku Tulis Editor</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="text-[11px] font-label-sm bg-surface-container-highest px-2 py-0.5 rounded-md font-mono">Tab 2 Spasi</span>
+<span class="text-[11px] font-label-sm bg-surface-container-highest px-2 py-0.5 rounded-md font-mono">UTF-8</span>
+</div>
+</div>
+<!-- File Index Tabs -->
+<div class="flex items-center gap-1.5 px-3 pt-2 bg-surface-container-low border-b border-surface-container-highest">
+<button class="file-tab flex items-center gap-1.5 px-4 py-2 rounded-t-xl bg-surface-container-lowest text-primary font-title-sm font-semibold shadow-xs transition-all border-t-2 border-primary" id="tab-html" onclick="switchFileTab('html')">
+<span class="material-symbols-outlined text-[16px] text-sakura-pink" style="font-variation-settings: 'FILL' 1;">description</span>
+<span>index.html</span>
+</button>
+<button class="file-tab flex items-center gap-1.5 px-4 py-2 rounded-t-xl bg-surface-container-high/60 text-on-surface-variant hover:bg-surface-container-highest font-title-sm transition-all border-t-2 border-transparent" id="tab-css" onclick="switchFileTab('css')">
+<span class="material-symbols-outlined text-[16px] text-pastel-lilac">palette</span>
+<span>style.css</span>
+</button>
+<button class="file-tab flex items-center gap-1.5 px-4 py-2 rounded-t-xl bg-surface-container-high/60 text-on-surface-variant hover:bg-surface-container-highest font-title-sm transition-all border-t-2 border-transparent" id="tab-js" onclick="switchFileTab('js')">
+<span class="material-symbols-outlined text-[16px] text-amber-500" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span>script.js</span>
+</button>
+</div>
+<!-- Code Editor Body (Clean isolated input area) -->
+<div class="relative flex min-h-[460px] max-h-[560px] bg-[#2a2228] text-surface-container-lowest font-code text-sm overflow-hidden">
+<!-- Line Numbers Gutter -->
+<div class="w-12 py-4 select-none bg-[#20191e] text-outline-variant font-code text-xs text-right pr-3 flex flex-col gap-1 leading-6 border-r border-[#3a3038]" id="editor-gutter">
+<!-- Generated lines dynamically -->
+</div>
+<!-- Code Textarea -->
+<div class="relative flex-1 p-0 overflow-auto">
+<textarea class="w-full h-full min-h-[460px] p-4 bg-transparent text-[#faf4ee] font-code text-xs md:text-sm leading-6 resize-none focus:outline-none focus:ring-0 whitespace-pre overflow-x-auto selection:bg-sakura-pink/40" id="code-editor" spellcheck="false" style="tab-size: 2;"></textarea>
+</div>
+</div>
+<!-- Editor Footer Status Bar -->
+<div class="px-4 py-2.5 bg-surface-container flex flex-wrap items-center justify-between gap-2 text-on-surface-variant font-label-sm border-t border-surface-container-highest">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">text_fields</span>
+<span id="cursor-pos">Baris 1, Kolom 1</span>
+</span>
+<span>•</span>
+<span id="char-count">1.2 KB</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-butter-yellow text-cocoa-ink hover:bg-amber-200 font-title-sm shadow-xs transition-colors border border-amber-300/60" id="clue-btn">
+<span class="material-symbols-outlined text-[17px] text-primary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<span>Petunjuk Kak Sarah</span>
+</button>
+</div>
+</div>
+<!-- RIGHT COLUMN: Live Result & Console Studio (lg:col-span-6) -->
+<div class="lg:col-span-6 flex flex-col gap-5">
+<!-- Live Preview Notebook Display -->
+<div class="flex flex-col bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container-high overflow-hidden">
+<!-- Window Top Bar -->
+<div class="bg-surface-container px-4 py-2.5 flex items-center justify-between border-b border-surface-container-highest">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">devices</span>
+<span class="font-headline-sm text-lg font-bold text-cocoa-ink">Pratinjau Langsung</span>
+<span class="bg-butter-yellow text-cocoa-ink px-2 py-0.5 rounded-full font-label-sm text-[11px] font-semibold border border-amber-300">Aktif</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-highest/60 p-1 rounded-xl">
+<button class="p-1.5 rounded-lg bg-surface-container-lowest text-primary shadow-xs transition-colors" id="view-desktop" onclick="setDeviceView('desktop')" title="Tampilan Komputer">
+<span class="material-symbols-outlined text-[17px]">desktop_windows</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-cocoa-ink transition-colors" id="view-mobile" onclick="setDeviceView('mobile')" title="Tampilan Ponsel Mini">
+<span class="material-symbols-outlined text-[17px]">smartphone</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition-colors" id="reload-preview" onclick="executeRunCode()" title="Muat Ulang Preview">
+<span class="material-symbols-outlined text-[17px]">refresh</span>
+</button>
+</div>
+</div>
+<!-- Preview Frame Canvas -->
+<div class="p-4 bg-milk-ivory transition-all flex items-center justify-center min-h-[320px]" id="preview-outer">
+<div class="w-full h-[320px] bg-white rounded-xl shadow-xs overflow-hidden transition-all duration-300 border border-surface-container-high" id="preview-wrapper">
+<iframe class="w-full h-full border-none bg-surface" id="live-iframe" sandbox="allow-scripts"></iframe>
+</div>
+</div>
+</div>
+<!-- Terminal Konsol Siswa -->
+<div class="flex flex-col bg-[#27202c] text-[#f6f2fa] rounded-2xl shadow-sm border border-secondary/30 overflow-hidden">
+<!-- Console Header -->
+<div class="bg-[#1e1823] px-4 py-2.5 flex items-center justify-between border-b border-white/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-pastel-lilac text-[18px]">terminal</span>
+<span class="font-title-sm text-sm font-semibold text-white">Terminal Konsol Siswa</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary text-white font-mono text-[10px]" id="log-count-badge">0 logs</span>
+</div>
+<button class="flex items-center gap-1 text-[11px] font-title-sm text-outline-variant hover:text-white transition-colors" onclick="clearConsoleLogs()">
+<span class="material-symbols-outlined text-[15px]">delete_sweep</span>
+<span>Bersihkan</span>
+</button>
+</div>
+<!-- Console Log Stream -->
+<div class="p-3 font-code text-xs flex flex-col gap-1.5 h-36 overflow-y-auto bg-[#231d27]" id="console-stream">
+<!-- Filled via JavaScript runtime only -->
+</div>
+<!-- Console Interactive Input -->
+<div class="bg-[#19131d] px-3.5 py-2 flex items-center gap-2 text-xs font-code border-t border-white/5">
+<span class="text-sakura-pink font-bold text-sm">&gt;</span>
+<input class="flex-1 bg-transparent text-white focus:outline-none placeholder-outline-variant/60 text-xs font-code" id="console-cmd" placeholder='Ketik perintah JS, misal: alert("Hai!") atau console.log(counter)' type="text"/>
+<button class="px-3 py-1 rounded-lg bg-secondary hover:bg-secondary/90 text-white text-[11px] font-title-sm transition-colors" onclick="evalConsoleCmd()">Kirim</button>
+</div>
+</div>
+</div>
+</div>
+<!-- BOTTOM SECTION: Rubric Checklist & Mentor Clue Memo -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 mb-8">
+<!-- Rubric Evaluation Box (lg:col-span-8) -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container-high p-6 relative">
+<!-- Bookmark Ribbon Header -->
+<div class="absolute -top-3.5 left-8 px-4 py-1 bg-sakura-pink text-cocoa-ink rounded-full font-label-md text-xs font-bold shadow-xs flex items-center gap-1.5 border border-primary/20">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+<span>Rubrik &amp; Kriteria Kelulusan Tantangan</span>
+</div>
+<div class="pt-2">
+<h2 class="font-headline-sm text-xl font-bold text-cocoa-ink mb-1">Target Penyelesaian: Counter Kucing Interaktif</h2>
+<p class="font-body-md text-base text-on-surface-variant mb-4">
+              Pastikan kodingan kamu memenuhi seluruh checklist otomatis berikut agar mendapatkan stempel pita emas dari Kak Sarah:
+            </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5">
+<!-- Checklist Item 1 -->
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high transition-all" id="check-1">
+<span class="material-symbols-outlined text-primary text-[22px] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<span class="font-title-sm font-bold text-cocoa-ink block">Kriteria 1</span>
+<span class="font-body-sm text-on-surface-variant">Tombol <code class="bg-surface-container-highest px-1 py-0.5 rounded text-primary font-mono text-[11px]">#btn-plus</code> memiliki listener click.</span>
+</div>
+</div>
+<!-- Checklist Item 2 -->
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high transition-all" id="check-2">
+<span class="material-symbols-outlined text-primary text-[22px] mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<span class="font-title-sm font-bold text-cocoa-ink block">Kriteria 2</span>
+<span class="font-body-sm text-on-surface-variant">Elemen <code class="bg-surface-container-highest px-1 py-0.5 rounded text-primary font-mono text-[11px]">#angka-counter</code> bertambah dinamis.</span>
+</div>
+</div>
+<!-- Checklist Item 3 -->
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-butter-yellow/40 border border-amber-200 transition-all" id="check-3">
+<span class="material-symbols-outlined text-soft-latte text-[22px] mt-0.5" id="check-3-icon">radio_button_unchecked</span>
+<div>
+<span class="font-title-sm font-bold text-cocoa-ink block">Kriteria 3 (Tantangan)</span>
+<span class="font-body-sm text-on-surface-variant">Warna angka berganti bila mencapai target 5.</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-surface-container-high">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span>Uji otomatis dijalankan setiap kali tombol <b>Jalankan Kode</b> ditekan.</span>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary/90 text-on-secondary font-title-sm font-semibold shadow-xs transition-transform active:scale-95 cursor-pointer" onclick="submitRubricReview()">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Kirim ke Kak Sarah untuk Review</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticky Memo: Mentor Note (lg:col-span-4) -->
+<div class="lg:col-span-4 bg-butter-yellow rounded-2xl shadow-sm border border-amber-200/80 p-6 relative rotate-[1deg]">
+<!-- Pin Tape Accents -->
+<div class="absolute -top-3.5 right-1/2 translate-x-1/2 w-24 h-5 bg-sakura-pink/80 rounded-xs shadow-xs rotate-[-3deg] flex items-center justify-center border-t border-b border-soft-latte/15">
+<span class="w-full h-0.5 bg-soft-latte/10"></span>
+</div>
+<div class="flex items-center gap-2 mb-2 pt-1">
+<span class="material-symbols-outlined text-primary text-[22px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-headline-sm text-xl font-bold text-cocoa-ink">Memo Kak Sarah</span>
+</div>
+<p class="font-body-lg text-base text-cocoa-ink leading-relaxed">
+            “Semangat belajarnya hari ini! Ingat konsep <code>document.getElementById()</code> saat menghubungkan tombol HTML dengan script JS. Jika ingin mengubah warna angka saat nilainya lebih dari 5, coba gunakan kondisi <code>if (angka &gt;= 5)</code> lalu ubah <code>style.color</code>-nya ya! Kamu pasti bisa!”
+          </p>
+<div class="mt-4 pt-3 flex items-center justify-between text-soft-latte font-body-sm border-t border-cocoa-ink/10">
+<span>Mentor Front-End Siswa</span>
+<span class="flex items-center gap-1 font-bold text-primary">
+<span class="material-symbols-outlined text-[16px]">school</span>
+<span>Belajar Yuk!</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Toast Modal -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 pointer-events-none" id="toast-notify">
+<div class="flex items-center gap-3 px-5 py-3 rounded-2xl bg-surface-container-lowest text-cocoa-ink shadow-xl border border-surface-container-high">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" id="toast-icon">check</span>
+</div>
+<div>
+<h4 class="font-title-sm text-sm font-bold text-cocoa-ink" id="toast-title">Berhasil Dijalankan!</h4>
+<p class="font-body-sm text-xs text-on-surface-variant" id="toast-desc">Pratinjau kodinganmu telah diperbarui.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Clean Footer -->
+<footer class="w-full bg-surface-container-low py-4 border-t border-surface-container-high">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 text-center font-body-sm text-on-surface-variant">
+      Semangat belajarnya hari ini! • Belajar Yuk! Personal Study Planner
+    </div>
+</footer>
+<!-- Isolated Logic Scripts -->
+<script>
+    const codeProjects = {
+      'cat-counter': {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Mali:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+</head>
+<body>
+  <div class="kartu-memo">
+    <div class="washi-pita"></div>
+    <div class="kucing-avatar">
+      <span class="material-symbols-outlined paw-icon">pets</span>
+    </div>
+    <h2 class="judul">Hitung Camilan Kucing</h2>
+    <p class="subjudul">Klik tombol di bawah untuk menambah camilan:</p>
+    
+    <div class="display-box">
+      <span id="angka-counter">0</span>
+    </div>
+    
+    <div class="btn-group">
+      <button id="btn-minus" class="tombol-lingkar" aria-label="Kurang">-</button>
+      <button id="btn-plus" class="tombol-lingkar plus-btn" aria-label="Tambah">+</button>
+    </div>
+    
+    <div id="pesan-status" class="catatan-kaki">Camilan masih kosong nih!</div>
+  </div>
+  <script src="script.js"><\/script>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  padding: 20px;
+  background-color: #faf7f2;
+  font-family: 'Patrick Hand', cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+}
+
+.kartu-memo {
+  position: relative;
+  background: #ffffff;
+  padding: 24px 28px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(141, 110, 99, 0.12);
+  width: 250px;
+}
+
+.washi-pita {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 90px;
+  height: 18px;
+  background-color: #ffe5a3;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.kucing-avatar {
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.paw-icon {
+  font-size: 26px;
+  color: #645495;
+}
+
+.judul {
+  font-family: 'Mali', sans-serif;
+  font-size: 17px;
+  color: #4a3e3d;
+  margin: 4px 0 2px 0;
+}
+
+.subjudul {
+  font-size: 13px;
+  color: #8d6e63;
+  margin: 0 0 12px 0;
+}
+
+.display-box {
+  background: #fdf6e2;
+  padding: 10px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+#angka-counter {
+  font-size: 36px;
+  font-weight: bold;
+  color: #8e4b49;
+  font-family: 'Mali', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tombol-lingkar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: #e8ddfc;
+  color: #4c3c7c;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(141,110,99,0.15);
+  transition: transform 0.1s;
+}
+
+.tombol-lingkar:active {
+  transform: scale(0.92);
+}
+
+.plus-btn {
+  background: #ffaaa6;
+  color: #3a0a0b;
+}
+
+.catatan-kaki {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #857371;
+}`,
+        js: `// Belajar Yuk! Playground Tantangan 01
+let counter = 0;
+const angkaDisplay = document.getElementById("angka-counter");
+const btnPlus = document.getElementById("btn-plus");
+const btnMinus = document.getElementById("btn-minus");
+const pesanStatus = document.getElementById("pesan-status");
+
+console.log("[Log] Inisialisasi Counter Kucing Pastel: 0");
+
+btnPlus.addEventListener("click", function() {
+  counter++;
+  updateTampilan();
+  console.log("[Log] Tombol tambah diklik! Nilai sekarang: " + counter);
+});
+
+btnMinus.addEventListener("click", function() {
+  if (counter > 0) {
+    counter--;
+    updateTampilan();
+    console.log("[Log] Tombol kurangi diklik! Nilai sekarang: " + counter);
+  }
+});
+
+function updateTampilan() {
+  angkaDisplay.textContent = counter;
+  
+  if (counter >= 5) {
+    angkaDisplay.style.color = "#ba1a1a";
+    pesanStatus.textContent = "Wah! Kucing sangat senang dan kenyang!";
+    console.log("[Success] Kriteria 3 tercapai: Angka berubah warna di 5!");
+  } else {
+    angkaDisplay.style.color = "#8e4b49";
+    pesanStatus.textContent = counter + " camilan disiapkan.";
+  }
+}`
+      },
+      'name-card': {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="id-card">
+    <div class="avatar-box">B</div>
+    <h2 class="nama">Budi Santoso</h2>
+    <span class="badge">Siswa Web Pemula</span>
+    <p class="desc">Belajar coding seru dan santai bersama Kak Sarah!</p>
+  </div>
+  <script src="script.js"><\/script>
+</body>
+</html>`,
+        css: `body {
+  background: #fdf6e2;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+  margin: 0;
+}
+.id-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  width: 220px;
+}
+.avatar-box {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 10px;
+  background: #ffaaa6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 22px;
+  color: white;
+}
+.nama {
+  margin: 6px 0 4px 0;
+  font-size: 18px;
+  color: #4a3e3d;
+}
+.badge {
+  background: #e8ddfc;
+  color: #4c3c7c;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+.desc {
+  font-size: 13px;
+  color: #8d6e63;
+  margin-top: 10px;
+}`,
+        js: `console.log("[Info] Kartu Nama Stationery termuat rapi!");`
+      },
+      'washi-todo': {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="todo-notebook">
+    <h3>Tugas Koding Hari Ini</h3>
+    <ul>
+      <li><label><input type="checkbox" checked> Kenalan dengan tag &lt;div&gt;</label></li>
+      <li><label><input type="checkbox" checked> Warnai CSS dengan Pastel</label></li>
+      <li><label><input type="checkbox"> Pasang Tombol Interaktif JS</label></li>
+    </ul>
+  </div>
+  <script src="script.js"><\/script>
+</body>
+</html>`,
+        css: `body {
+  background: #faf7f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+  margin: 0;
+  font-family: sans-serif;
+}
+.todo-notebook {
+  background: white;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  width: 240px;
+}
+h3 { margin-top: 0; color: #8e4b49; font-size: 16px; }
+ul { list-style: none; padding: 0; margin: 0; }
+li { padding: 6px 0; color: #4a3e3d; font-size: 13px; }`,
+        js: `console.log("[Log] Daftar todo washi berhasil dimuat.");`
+      },
+      'scratchpad': {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: sans-serif; padding: 24px; background: #fffcf8; color: #4A3E3D; }
+    h1 { color: #8E4B49; font-size: 22px; }
+  </style>
+</head>
+<body>
+  <h1>Halo Dunia Koding!</h1>
+  <p>Silakan bebas bereksperimen di kanvas kosong ini.</p>
+</body>
+</html>`,
+        css: `/* Tambahkan gaya CSS di sini */`,
+        js: `console.log("[Scratchpad] Siap menerima kodingan barumu!");`
+      }
+    };
+
+    let currentProject = 'cat-counter';
+    let activeTab = 'html';
+    const editor = document.getElementById("code-editor");
+
+    function loadProject(key) {
+      currentProject = key;
+      activeTab = 'html';
+      updateTabVisuals();
+      editor.value = codeProjects[key][activeTab];
+      updateEditorMeta();
+      executeRunCode();
+    }
+
+    function switchFileTab(tabName) {
+      codeProjects[currentProject][activeTab] = editor.value;
+      activeTab = tabName;
+      updateTabVisuals();
+      editor.value = codeProjects[currentProject][tabName];
+      updateEditorMeta();
+    }
+
+    function updateTabVisuals() {
+      const tabs = ['html', 'css', 'js'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (t === activeTab) {
+          el.className = "file-tab flex items-center gap-1.5 px-4 py-2 rounded-t-xl bg-surface-container-lowest text-primary font-title-sm font-semibold shadow-xs transition-all border-t-2 border-primary";
+        } else {
+          el.className = "file-tab flex items-center gap-1.5 px-4 py-2 rounded-t-xl bg-surface-container-high/60 text-on-surface-variant hover:bg-surface-container-highest font-title-sm transition-all border-t-2 border-transparent";
+        }
+      });
+    }
+
+    function executeRunCode() {
+      codeProjects[currentProject][activeTab] = editor.value;
+
+      const htmlContent = codeProjects[currentProject].html;
+      const cssContent = codeProjects[currentProject].css;
+      const jsContent = codeProjects[currentProject].js;
+
+      const iframe = document.getElementById('live-iframe');
+
+      // Sanitize HTML body extraction safely
+      const cleanHtml = htmlContent.replace(/<!DOCTYPE html>|<\/?html[^>]*>|<\/?head[^>]*>|<\/?body[^>]*>|<link[^>]*>/gi, '');
+
+      const combinedSource = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Mali:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+          <style>${cssContent}</style>
+        </head>
+        <body>
+          ${cleanHtml}
+          <script>
+            (function() {
+              const originalLog = console.log;
+              const originalError = console.error;
+              console.log = function(...args) {
+                window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'LOG', msg: args.join(' ') }, '*');
+                originalLog.apply(console, args);
+              };
+              console.error = function(...args) {
+                window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'ERROR', msg: args.join(' ') }, '*');
+                originalError.apply(console, args);
+              };
+              window.onerror = function(message, source, lineno) {
+                window.parent.postMessage({ type: 'CONSOLE_LOG', level: 'ERROR', msg: message + ' (baris ' + lineno + ')' }, '*');
+              };
+            })();
+          <\/script>
+          <script>${jsContent}<\/script>
+        </body>
+        </html>
+      `;
+
+      iframe.srcdoc = combinedSource;
+
+      showToast("Berhasil Dijalankan!", "Kode dieksekusi di pratinjau langsung.", "check");
+      addConsoleEntry("INFO", "Kompilasi kodingan berhasil dijalankan.", "#dfd2ff", "bg-secondary/40");
+
+      evaluateCriteria(htmlContent, jsContent);
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'CONSOLE_LOG') {
+        const isError = event.data.level === 'ERROR';
+        const colorText = isError ? "#ffb4ab" : "#fdf6e2";
+        const bgBadge = isError ? "bg-[#801313]" : "bg-butter-yellow/20 text-butter-yellow";
+        addConsoleEntry(event.data.level, event.data.msg, colorText, bgBadge);
+
+        if (event.data.msg && event.data.msg.includes("Kriteria 3 tercapai")) {
+          const c3 = document.getElementById('check-3');
+          const c3Icon = document.getElementById('check-3-icon');
+          if (c3 && c3Icon) {
+            c3.className = "flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high transition-all";
+            c3Icon.textContent = "check_circle";
+            c3Icon.style.fontVariationSettings = "'FILL' 1";
+            c3Icon.className = "material-symbols-outlined text-primary text-[22px] mt-0.5";
+          }
+        }
+      }
+    });
+
+    function addConsoleEntry(level, msg, colorText, bgBadge) {
+      const stream = document.getElementById('console-stream');
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+      const line = document.createElement('div');
+      line.className = "flex items-start gap-2 font-code";
+      line.style.color = colorText;
+      line.innerHTML = `
+        <span class="opacity-60 select-none">[${timeStr}]</span>
+        <span class="${bgBadge} px-1.5 py-0.2 rounded text-[10px] font-bold">${level}</span>
+        <span class="break-all">${escapeHtml(msg)}</span>
+      `;
+      stream.appendChild(line);
+      stream.scrollTop = stream.scrollHeight;
+
+      const total = stream.children.length;
+      document.getElementById('log-count-badge').textContent = total + " logs";
+    }
+
+    function clearConsoleLogs() {
+      const stream = document.getElementById('console-stream');
+      stream.innerHTML = '';
+      document.getElementById('log-count-badge').textContent = "0 logs";
+    }
+
+    function evalConsoleCmd() {
+      const input = document.getElementById('console-cmd');
+      const cmd = input.value.trim();
+      if (!cmd) return;
+
+      addConsoleEntry("CMD", "> " + cmd, "#e8ddfc", "bg-secondary");
+      const iframe = document.getElementById('live-iframe');
+      try {
+        if (iframe.contentWindow) {
+          const res = iframe.contentWindow.eval(cmd);
+          if (res !== undefined) {
+            addConsoleEntry("RETURN", String(res), "#b0f2c2", "bg-[#235832]");
+          }
+        }
+      } catch (err) {
+        addConsoleEntry("ERROR", err.message, "#ffb4ab", "bg-[#801313]");
+      }
+      input.value = '';
+    }
+
+    function evaluateCriteria(html, js) {
+      const check1 = document.getElementById('check-1');
+      const check2 = document.getElementById('check-2');
+
+      const hasListener = js.includes('btnPlus.addEventListener') || js.includes('addEventListener("click"');
+      const hasCounterLogic = js.includes('counter++') || js.includes('counter += 1');
+
+      if (hasListener && check1) {
+        check1.className = "flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high transition-all";
+      }
+      if (hasCounterLogic && check2) {
+        check2.className = "flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high transition-all";
+      }
+    }
+
+    function setDeviceView(mode) {
+      const wrap = document.getElementById('preview-wrapper');
+      const btnDesk = document.getElementById('view-desktop');
+      const btnMob = document.getElementById('view-mobile');
+
+      if (mode === 'mobile') {
+        wrap.style.maxWidth = '290px';
+        btnMob.className = "p-1.5 rounded-lg bg-surface-container-lowest text-primary shadow-xs transition-colors";
+        btnDesk.className = "p-1.5 rounded-lg text-on-surface-variant hover:text-cocoa-ink transition-colors";
+      } else {
+        wrap.style.maxWidth = '100%';
+        btnDesk.className = "p-1.5 rounded-lg bg-surface-container-lowest text-primary shadow-xs transition-colors";
+        btnMob.className = "p-1.5 rounded-lg text-on-surface-variant hover:text-cocoa-ink transition-colors";
+      }
+    }
+
+    function formatCode() {
+      const raw = editor.value;
+      editor.value = raw.split('\n').map(l => l.trimEnd()).join('\n');
+      showToast("Kode Dirapikan!", "Spasi kosong berlebih telah dibersihkan.", "auto_fix_high");
+    }
+
+    function copyCode() {
+      navigator.clipboard.writeText(editor.value).then(() => {
+        showToast("Berhasil Disalin!", "Teks kode tersimpan di clipboard.", "content_copy");
+      });
+    }
+
+    function resetChallengeCode() {
+      loadProject(currentProject);
+      showToast("Kode Direset!", "Mengembalikan ke kode awal tantangan.", "restart_alt");
+    }
+
+    function updateEditorMeta() {
+      const text = editor.value;
+      const lines = text.split('\n').length;
+      const gutter = document.getElementById('editor-gutter');
+      gutter.innerHTML = Array.from({ length: Math.max(lines, 18) }, (_, i) => `<span>${i + 1}</span>`).join('');
+
+      const bytes = new Blob([text]).size;
+      document.getElementById('char-count').textContent = (bytes / 1024).toFixed(1) + " KB";
+    }
+
+    function showToast(title, desc, iconName) {
+      const toast = document.getElementById('toast-notify');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-desc').textContent = desc;
+      document.getElementById('toast-icon').textContent = iconName || 'check';
+
+      toast.classList.remove('translate-y-28', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-28', 'opacity-0');
+      }, 2600);
+    }
+
+    function submitRubricReview() {
+      showToast("Terkirim ke Kak Sarah!", "Tugasmu sedang diperiksa oleh mentor. Notifikasi segera dikirimkan!", "favorite");
+      addConsoleEntry("MENTOR", "Kak Sarah: Tugas diterima! Sedang diperiksa dengan teliti.", "#fdf6e2", "bg-primary");
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Attach Listeners
+    document.getElementById('run-btn').addEventListener('click', executeRunCode);
+    document.getElementById('format-btn').addEventListener('click', formatCode);
+    document.getElementById('copy-btn').addEventListener('click', copyCode);
+    document.getElementById('reset-btn').addEventListener('click', resetChallengeCode);
+
+    document.getElementById('challenge-select').addEventListener('change', function(e) {
+      loadProject(e.target.value);
+    });
+
+    document.getElementById('clue-btn').addEventListener('click', function() {
+      showToast("Petunjuk Terbuka!", "Perhatikan kolom 'Memo Kak Sarah' di bagian bawah layar ya!", "lightbulb");
+    });
+
+    editor.addEventListener('input', () => {
+      updateEditorMeta();
+      document.getElementById('save-status').textContent = "Menyimpan...";
+      setTimeout(() => {
+        document.getElementById('save-status').textContent = "Tersimpan di Binder";
+      }, 500);
+    });
+
+    editor.addEventListener('keyup', () => {
+      const textBefore = editor.value.substr(0, editor.selectionStart);
+      const line = textBefore.split('\n').length;
+      const col = textBefore.split('\n').pop().length + 1;
+      document.getElementById('cursor-pos').textContent = `Baris ${line}, Kolom ${col}`;
+    });
+
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        executeRunCode();
+      }
+    });
+
+    document.getElementById('console-cmd').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        evalConsoleCmd();
+      }
+    });
+
+    // Boot initial state
+    loadProject('cat-counter');
+  </script>
+</body></html>
