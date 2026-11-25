@@ -53,6 +53,7 @@ describe("Kawaii stationery UI primitives", () => {
     expect(html).toContain("/notes");
     expect(html).toContain("/playground");
     expect(html).toContain("/stats");
+    expect(html).not.toContain("rounded-full bg-white border-2 border-[#FFAAA6]");
     expect(findEmojiViolations(html)).toEqual([]);
   });
 

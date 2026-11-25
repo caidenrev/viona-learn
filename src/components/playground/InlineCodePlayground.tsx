@@ -101,7 +101,7 @@ export function InlineCodePlayground({
                 onUpdateAttrs({ title: e.target.value, html, css, js });
               }}
               aria-label="Judul Code Playground"
-              className="min-w-[160px] flex-1 min-h-[36px] rounded-xl bg-white border border-[#eadfd5] px-2.5 font-[family-name:var(--font-gaegu)] text-xl font-bold text-[#4a3e3d]"
+              className="min-w-0 w-full sm:w-auto sm:flex-1 min-h-[36px] rounded-xl bg-white border border-[#eadfd5] px-2.5 font-[family-name:var(--font-gaegu)] text-xl font-bold text-[#4a3e3d]"
             />
           ) : (
             <h4 className="font-[family-name:var(--font-gaegu)] text-xl font-bold text-[#4a3e3d] break-words">

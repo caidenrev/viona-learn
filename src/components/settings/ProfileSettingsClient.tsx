@@ -107,7 +107,7 @@ export function ProfileSettingsClient({
             <StickerImage
               src={avatarUrl}
               alt={name}
-              className="w-28 h-28 rounded-full border-2 border-[#FFAAA6] bg-white p-1"
+              className="w-24 h-24 sm:w-28 sm:h-28"
             />
             <div className="font-[family-name:var(--font-gaegu)] text-2xl font-bold">
               {nickname || name}
@@ -121,7 +121,7 @@ export function ProfileSettingsClient({
                     key={src}
                     type="button"
                     onClick={() => setAvatarUrl(src)}
-                    className={`w-12 h-12 rounded-full border-2 p-1 bg-white ${
+                    className={`w-12 h-12 rounded-2xl border-2 p-1 bg-white/80 transition-transform hover:scale-105 ${
                       avatarUrl === src ? "border-[#8e4b49]" : "border-[#eadfd5]"
                     }`}
                   >

@@ -74,13 +74,13 @@ export function AppShell({
   return (
     <div className="min-h-screen flex flex-col bg-[#fcf9f4] text-[#4a3e3d] overflow-x-hidden">
       <header className="sticky top-0 z-40 w-full bg-[#fcf9f4]/90 backdrop-blur-xl border-b border-[#eadfd5]">
-        <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-3">
+        <div className="h-16 max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 flex items-center justify-between gap-2 sm:gap-3">
           <Link
             href={role === "TEACHER" ? "/admin" : "/workspace"}
-            className="flex items-center gap-2 min-w-0 shrink-0"
+            className="flex items-center gap-2 min-w-0 shrink"
           >
-            <BookStackIcon className="w-6 h-6 text-[#8e4b49]" />
-            <span className="font-[family-name:var(--font-gaegu)] text-2xl font-bold text-[#8e4b49] tracking-tight truncate">
+            <BookStackIcon className="w-6 h-6 text-[#8e4b49] shrink-0" />
+            <span className="font-[family-name:var(--font-gaegu)] text-xl sm:text-2xl font-bold text-[#8e4b49] tracking-tight truncate">
               {siteTitle}
             </span>
           </Link>
@@ -118,19 +118,19 @@ export function AppShell({
             <Link
               href={role === "TEACHER" ? "/admin/settings" : "/settings"}
               aria-label={`Pengaturan akun ${userName}`}
-              className="w-10 h-10 rounded-full bg-white border-2 border-[#FFAAA6] overflow-hidden flex items-center justify-center shadow-xs shrink-0"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center shrink-0 transition-transform hover:scale-105"
             >
               <img
                 src={avatarUrl || STICKERS.mascotHirono}
                 alt={userName}
-                className="w-full h-full object-cover"
+                className="w-10 h-10 object-contain drop-shadow-[0_2px_4px_rgba(141,110,99,0.2)]"
               />
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-6 pb-24 md:pb-10">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 py-5 sm:py-6 pb-28 md:pb-10 min-w-0">
         {children}
       </main>
 
@@ -140,7 +140,7 @@ export function AppShell({
 
       <nav
         aria-label="Navigasi Mobile"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-t-2 border-dashed border-[#eadfd5] px-2 py-1.5"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-t-2 border-dashed border-[#eadfd5] px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]"
       >
         <div className="flex items-center justify-around gap-1">
           {navItems.map((item) => {

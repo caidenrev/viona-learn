@@ -27,6 +27,11 @@ test.describe("Viona Learn Room Desktop & Mobile Verification", () => {
       ).length
     );
     expect(brokenImages).toBe(0);
+
+    const mascotHasCircle = await page
+      .getByAltText("Maskot Belajar Yuk")
+      .evaluate((el) => el.className.includes("rounded-full"));
+    expect(mascotHasCircle).toBe(false);
   });
 
   test("unauthenticated access to student and teacher routes redirects to /login", async ({

@@ -219,10 +219,10 @@ export function BentoWorkspaceClient({
               <div className="flex flex-wrap items-center gap-3 pt-1">
                 <Link
                   href={`/learn/${activeCourse.slug}`}
-                  className="squishy-btn inline-flex items-center gap-2 rounded-full bg-[#8e4b49] text-white px-5 py-2.5 min-h-[44px] font-[family-name:var(--font-mali)] text-sm font-bold"
+                  className="squishy-btn inline-flex flex-wrap items-center justify-center gap-2 rounded-full bg-[#8e4b49] text-white px-5 py-2.5 min-h-[44px] max-w-full font-[family-name:var(--font-mali)] text-sm font-bold text-center"
                 >
-                  <span>Lanjut: {activeCourse.title}</span>
-                  <ArrowRightIcon className="w-4 h-4" />
+                  <span className="break-words">Lanjut: {activeCourse.title}</span>
+                  <ArrowRightIcon className="w-4 h-4 shrink-0" />
                 </Link>
                 <TanyaHusbandButton
                   phone={teacherWhatsapp}

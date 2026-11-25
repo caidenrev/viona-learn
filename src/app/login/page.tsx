@@ -50,13 +50,11 @@ export default function LoginPage() {
           className="bg-[#ffffff] p-6 sm:p-8"
         >
           <div className="flex flex-col items-center text-center mb-6">
-            <div className="relative mb-3">
-              <StickerImage
-                src={STICKERS.mascotHirono}
-                alt="Maskot Belajar Yuk"
-                className="w-24 h-24 rounded-full border-2 border-[#FFAAA6] bg-[#faf7f2] p-1"
-              />
-            </div>
+            <StickerImage
+              src={STICKERS.mascotHirono}
+              alt="Maskot Belajar Yuk"
+              className="w-24 h-24 sm:w-28 sm:h-28 mb-3"
+            />
             <RibbonTag color="butter" className="mb-2">
               <SparkleIcon className="w-3.5 h-3.5" />
               <span>BELAJAR YUK!</span>

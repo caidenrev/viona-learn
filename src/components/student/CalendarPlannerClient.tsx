@@ -98,7 +98,7 @@ export function CalendarPlannerClient({
             </div>
           }
         >
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {Array.from({ length: daysInMonth }, (_, idx) => {
               const day = idx + 1;
               const dateKey = `${month}-${String(day).padStart(2, "0")}`;
@@ -111,7 +111,7 @@ export function CalendarPlannerClient({
                   key={dateKey}
                   type="button"
                   onClick={() => setSelectedDay(isSelected ? "" : dateKey)}
-                  className={`min-h-[56px] rounded-2xl p-1.5 border flex flex-col items-center justify-between transition-colors ${
+                  className={`min-h-[44px] sm:min-h-[56px] rounded-xl sm:rounded-2xl p-1 sm:p-1.5 border flex flex-col items-center justify-between transition-colors ${
                     isSelected
                       ? "bg-[#C8B6FF] border-[#645495]"
                       : hasStreak

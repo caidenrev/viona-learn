@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Gaegu, Mali, Patrick_Hand, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -30,6 +30,12 @@ export const metadata: Metadata = {
   title: "Belajar Yuk! - Viona Learn Room",
   description:
     "Personal pastel stationery LMS and daily study planner for structured learning.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
