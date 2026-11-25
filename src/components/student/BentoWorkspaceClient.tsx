@@ -505,7 +505,7 @@ export function BentoWorkspaceClient({
           </WashiCard>
 
           <WashiCard
-            tapeColor="yellow"
+            tapeColor="brown"
             title="MY NOTES!"
             className="lined-memo"
             badge={
