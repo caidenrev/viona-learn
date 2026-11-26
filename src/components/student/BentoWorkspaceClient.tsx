@@ -207,9 +207,9 @@ export function BentoWorkspaceClient({
                   {completedModules}/{totalModules} Modul Selesai ({overallPercent}%)
                 </span>
               </div>
-              <div className="w-full h-4 bg-[#e5e2dd] rounded-full overflow-hidden p-0.5 border border-[#dedad4]">
+              <div className="w-full h-4 bg-[#ebe4dc] rounded-full overflow-hidden p-0.5 border border-[#dfd3c7]">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#c6e9ee] via-[#C8B6FF] to-[#FFAAA6] transition-all duration-500"
+                  className="h-full rounded-full bg-[#8D6E63] transition-all duration-500"
                   style={{ width: `${overallPercent}%` }}
                 />
               </div>
@@ -400,9 +400,9 @@ export function BentoWorkspaceClient({
                     </div>
 
                     {isActive && (
-                      <div className="mt-4 w-full h-3 bg-white rounded-full overflow-hidden p-0.5 border border-[#FFAAA6]">
+                      <div className="mt-4 w-full h-3 bg-white rounded-full overflow-hidden p-0.5 border border-[#dfd3c7]">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#FFAAA6] to-[#8e4b49] transition-all"
+                          className="h-full rounded-full bg-[#8D6E63] transition-all"
                           style={{ width: `${pct}%` }}
                         />
                       </div>

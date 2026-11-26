@@ -164,9 +164,9 @@ export function CourseReaderClient({
         <div className="text-xs font-[family-name:var(--font-mali)] font-bold text-[#8e4b49]">
           {course.title}
         </div>
-        <div className="w-full h-2.5 bg-[#ebe8e3] rounded-full mt-2 overflow-hidden">
+        <div className="w-full h-2.5 bg-[#ebe4dc] rounded-full mt-2 overflow-hidden">
           <div
-            className="h-full bg-[#FFAAA6] rounded-full transition-all"
+            className="h-full bg-[#8D6E63] rounded-full transition-all"
             style={{ width: `${progressPct}%` }}
           />
         </div>
