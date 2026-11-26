@@ -9,6 +9,7 @@ import {
   WashiCard,
 } from "@/components/ui/PastelPrimitives";
 import { STICKERS } from "@/lib/stickers";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 const AVATAR_CHOICES = [
   STICKERS.mascotHirono,
@@ -87,12 +88,6 @@ export function ProfileSettingsClient({
     setPwMsg("Kata sandi berhasil diperbarui.");
     setCurrentPassword("");
     setNewPassword("");
-  }
-
-  async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-    router.refresh();
   }
 
   return (
@@ -193,9 +188,7 @@ export function ProfileSettingsClient({
               >
                 Ganti Kata Sandi
               </SquishyButton>
-              <SquishyButton type="button" variant="outline" onClick={logout}>
-                Keluar Akun
-              </SquishyButton>
+              <LogoutButton />
             </div>
 
             {pwOpen && (

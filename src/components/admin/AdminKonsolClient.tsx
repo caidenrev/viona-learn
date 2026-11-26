@@ -18,6 +18,7 @@ import {
   type AdminCourseListItem,
   type AdminRoadmapOption,
 } from "@/components/admin/AdminCourseManager";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import {
   RibbonTag,
   SquishyButton,
@@ -128,6 +129,7 @@ export function AdminKonsolClient({
               >
                 <span>Setelan WhatsApp &amp; Akun</span>
               </Link>
+              <LogoutButton />
             </div>
           </div>
           <StickerImage

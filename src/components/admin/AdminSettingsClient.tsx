@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { SquishyButton, WashiCard, RibbonTag } from "@/components/ui/PastelPrimitives";
 
 export function AdminSettingsClient({
@@ -90,15 +91,18 @@ export function AdminSettingsClient({
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <SquishyButton type="submit" variant="primary">
-              Simpan Pengaturan
-            </SquishyButton>
-            {message && (
-              <span className="font-[family-name:var(--font-mali)] text-xs font-bold text-[#436468]">
-                {message}
-              </span>
-            )}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <SquishyButton type="submit" variant="primary">
+                Simpan Pengaturan
+              </SquishyButton>
+              {message && (
+                <span className="font-[family-name:var(--font-mali)] text-xs font-bold text-[#436468]">
+                  {message}
+                </span>
+              )}
+            </div>
+            <LogoutButton />
           </div>
         </form>
       </WashiCard>

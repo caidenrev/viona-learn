@@ -9,6 +9,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { LessonRenderer } from "@/components/editor/LessonRenderer";
 import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
 import { AdminCourseManager } from "@/components/admin/AdminCourseManager";
+import { AdminSettingsClient } from "@/components/admin/AdminSettingsClient";
 import { computeAchievements } from "@/lib/achievements";
 import { findEmojiViolations } from "@/lib/emoji-guard";
 
@@ -148,6 +149,18 @@ describe("Kawaii stationery UI primitives", () => {
     expect(html).toContain("HTML &amp; CSS Pastel");
     expect(html).toContain("Edit");
     expect(html).toContain("Hapus");
+    expect(findEmojiViolations(html)).toEqual([]);
+  });
+
+  it("renders AdminSettingsClient with Keluar Akun logout button and zero emojis", () => {
+    const html = renderToStaticMarkup(
+      <AdminSettingsClient
+        initialWhatsapp="6281234567890"
+        initialSiteTitle="Viona Learn"
+        studentUsername="viona"
+      />
+    );
+    expect(html).toContain("Keluar Akun");
     expect(findEmojiViolations(html)).toEqual([]);
   });
 });
