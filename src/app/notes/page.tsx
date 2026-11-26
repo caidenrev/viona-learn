@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { NotesTasksClient } from "@/components/student/NotesTasksClient";
@@ -15,22 +16,30 @@ export default async function NotesPage() {
 
   const [user, settings, tasks, notes, submissions, activities] =
     await Promise.all([
-      prisma.user.findUnique({ where: { id: session.userId } }),
-      prisma.appSettings.findUnique({ where: { id: "default" } }),
-      prisma.workspaceTask.findMany({
-        where: { userId: session.userId },
-        orderBy: [{ completed: "asc" }, { createdAt: "desc" }],
-      }),
-      prisma.note.findMany({
-        where: { userId: session.userId },
-        orderBy: { updatedAt: "desc" },
-      }),
-      prisma.courseSubmission.findMany({
-        where: { userId: session.userId },
-        include: { course: { select: { title: true } } },
-        orderBy: { updatedAt: "desc" },
-      }),
-      prisma.dailyActivity.findMany({ where: { userId: session.userId } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { nickname: true, avatarUrl: true },
+    }),
+    getCachedAppSettings(),
+    prisma.workspaceTask.findMany({
+      where: { userId: session.userId },
+      orderBy: [{ completed: "asc" }, { createdAt: "desc" }],
+    }),
+    prisma.note.findMany({
+      where: { userId: session.userId },
+      orderBy: { updatedAt: "desc" },
+    }),
+    prisma.courseSubmission.findMany({
+      where: { userId: session.userId },
+      include: { course: { select: { title: true } } },
+      orderBy: { updatedAt: "desc" },
+    }),
+    prisma.dailyActivity.findMany({
+      where: { userId: session.userId },
+      orderBy: { dateKey: "desc" },
+      take: 90,
+      select: { dateKey: true },
+    }),
     ]);
 
   const streak = calculateCurrentStreak(

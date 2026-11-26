@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { CodePlaygroundClient } from "@/components/student/CodePlaygroundClient";
@@ -14,9 +15,17 @@ export default async function PlaygroundPage() {
   if (session.role !== "STUDENT") redirect("/admin");
 
   const [user, settings, activities] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
-    prisma.dailyActivity.findMany({ where: { userId: session.userId } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { nickname: true, avatarUrl: true },
+    }),
+    getCachedAppSettings(),
+    prisma.dailyActivity.findMany({
+      where: { userId: session.userId },
+      orderBy: { dateKey: "desc" },
+      take: 90,
+      select: { dateKey: true },
+    }),
   ]);
 
   const streak = calculateCurrentStreak(

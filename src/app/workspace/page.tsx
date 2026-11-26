@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { computeRoadmapCourseStates } from "@/lib/progression";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { computeAchievements } from "@/lib/achievements";
@@ -30,8 +31,11 @@ export default async function WorkspacePage() {
     submissionsCount,
     totalNotesCount,
   ] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { name: true, nickname: true, avatarUrl: true },
+    }),
+    getCachedAppSettings(),
     prisma.playlist.findMany({
       where: { status: "PUBLISHED" },
       orderBy: [{ orderIndex: "asc" }, { createdAt: "asc" }],
@@ -84,6 +88,7 @@ export default async function WorkspacePage() {
       where: { userId: session.userId },
       orderBy: { dateKey: "desc" },
       take: 60,
+      select: { dateKey: true },
     }),
     prisma.courseSubmission.count({ where: { userId: session.userId } }),
     prisma.note.count({ where: { userId: session.userId } }),

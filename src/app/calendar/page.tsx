@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey, getMonthRange, toJakartaDateKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { CalendarPlannerClient } from "@/components/student/CalendarPlannerClient";
@@ -18,8 +19,11 @@ export default async function CalendarPage() {
 
   const [user, settings, roadmaps, courses, tasks, monthActivities, allActivities] =
     await Promise.all([
-      prisma.user.findUnique({ where: { id: session.userId } }),
-      prisma.appSettings.findUnique({ where: { id: "default" } }),
+      prisma.user.findUnique({
+        where: { id: session.userId },
+        select: { nickname: true, avatarUrl: true },
+      }),
+      getCachedAppSettings(),
       prisma.roadmap.findMany({
         where: { status: "PUBLISHED", targetDate: { gte: start, lte: end } },
         select: { id: true, title: true, targetDate: true },
@@ -38,8 +42,14 @@ export default async function CalendarPage() {
       }),
       prisma.dailyActivity.findMany({
         where: { userId: session.userId, dateKey: { gte: startKey, lte: endKey } },
+        select: { dateKey: true, studyMinutes: true, activityCount: true },
       }),
-      prisma.dailyActivity.findMany({ where: { userId: session.userId } }),
+      prisma.dailyActivity.findMany({
+        where: { userId: session.userId },
+        orderBy: { dateKey: "desc" },
+        take: 90,
+        select: { dateKey: true },
+      }),
     ]);
 
   const events = [

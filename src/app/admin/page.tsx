@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { AdminKonsolClient } from "@/components/admin/AdminKonsolClient";
@@ -17,6 +18,7 @@ export default async function AdminPage() {
     teacher,
     student,
     settings,
+    activities,
     roadmaps,
     courses,
     submissions,
@@ -24,9 +26,27 @@ export default async function AdminPage() {
     attempts,
     mentorNotes,
   ] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.user.findUnique({ where: { role: "STUDENT" } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { name: true, avatarUrl: true },
+    }),
+    prisma.user.findUnique({
+      where: { role: "STUDENT" },
+      select: {
+        id: true,
+        name: true,
+        nickname: true,
+        avatarUrl: true,
+        dreamTarget: true,
+      },
+    }),
+    getCachedAppSettings(),
+    prisma.dailyActivity.findMany({
+      where: { user: { role: "STUDENT" } },
+      orderBy: { dateKey: "desc" },
+      take: 60,
+      select: { dateKey: true },
+    }),
     prisma.roadmap.findMany({
       orderBy: { orderIndex: "asc" },
       select: { id: true, title: true },
@@ -57,14 +77,6 @@ export default async function AdminPage() {
       orderBy: { updatedAt: "desc" },
     }),
   ]);
-
-  const activities = student
-    ? await prisma.dailyActivity.findMany({
-        where: { userId: student.id },
-        orderBy: { dateKey: "desc" },
-        take: 60,
-      })
-    : [];
 
   const streak = calculateCurrentStreak(
     activities.map((a) => a.dateKey),

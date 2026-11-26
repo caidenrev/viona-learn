@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { hashPassword, requireRole } from "@/lib/auth";
 import { handleApiError } from "@/lib/api-helpers";
@@ -54,6 +55,11 @@ export async function PATCH(req: Request) {
           siteTitle: parsed.siteTitle ?? "Viona Learn",
         },
       });
+      try {
+        revalidateTag("app-settings");
+      } catch {
+        // Safe no-op outside Next.js server runtime (e.g. unit tests)
+      }
     }
 
     if (parsed.resetStudentPassword) {

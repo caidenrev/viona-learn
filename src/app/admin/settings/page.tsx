@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { AdminSettingsClient } from "@/components/admin/AdminSettingsClient";
@@ -13,15 +14,24 @@ export default async function AdminSettingsPage() {
   if (!session) redirect("/login");
   if (session.role !== "TEACHER") redirect("/workspace");
 
-  const [teacher, student, settings] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.user.findUnique({ where: { role: "STUDENT" } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
+  const [teacher, student, settings, activities] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { name: true, avatarUrl: true },
+    }),
+    prisma.user.findUnique({
+      where: { role: "STUDENT" },
+      select: { username: true },
+    }),
+    getCachedAppSettings(),
+    prisma.dailyActivity.findMany({
+      where: { user: { role: "STUDENT" } },
+      orderBy: { dateKey: "desc" },
+      take: 90,
+      select: { dateKey: true },
+    }),
   ]);
 
-  const activities = student
-    ? await prisma.dailyActivity.findMany({ where: { userId: student.id } })
-    : [];
   const streak = calculateCurrentStreak(
     activities.map((a) => a.dateKey),
     getJakartaTodayKey()

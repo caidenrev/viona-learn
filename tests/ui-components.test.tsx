@@ -6,6 +6,7 @@ import {
   SquishyButton,
 } from "@/components/ui/PastelPrimitives";
 import { AppShell } from "@/components/layout/AppShell";
+import { PageLoadingSkeleton } from "@/components/layout/PageLoadingSkeleton";
 import { LessonRenderer } from "@/components/editor/LessonRenderer";
 import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
 import { AdminCourseManager } from "@/components/admin/AdminCourseManager";
@@ -161,6 +162,12 @@ describe("Kawaii stationery UI primitives", () => {
       />
     );
     expect(html).toContain("Keluar Akun");
+    expect(findEmojiViolations(html)).toEqual([]);
+  });
+
+  it("renders PageLoadingSkeleton with zero emojis", () => {
+    const html = renderToStaticMarkup(<PageLoadingSkeleton />);
+    expect(html).toContain("Viona Learn");
     expect(findEmojiViolations(html)).toEqual([]);
   });
 });

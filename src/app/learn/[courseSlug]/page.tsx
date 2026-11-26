@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { getPublishedRoadmapCourseStates } from "@/lib/student-course-access";
 import { AppShell } from "@/components/layout/AppShell";
@@ -21,8 +22,11 @@ export default async function LearnCoursePage({
   const { courseSlug } = await params;
 
   const [user, settings, course, activities] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { nickname: true, avatarUrl: true },
+    }),
+    getCachedAppSettings(),
     prisma.course.findFirst({
       where: {
         slug: courseSlug,
@@ -38,7 +42,12 @@ export default async function LearnCoursePage({
         _count: { select: { quizQuestions: true } },
       },
     }),
-    prisma.dailyActivity.findMany({ where: { userId: session.userId } }),
+    prisma.dailyActivity.findMany({
+      where: { userId: session.userId },
+      orderBy: { dateKey: "desc" },
+      take: 90,
+      select: { dateKey: true },
+    }),
   ]);
 
   if (!course) notFound();

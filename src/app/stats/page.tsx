@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey, shiftDateKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import {
@@ -41,12 +42,16 @@ export default async function StatsPage() {
     submissionsCount,
     notesCount,
   ] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { nickname: true, avatarUrl: true },
+    }),
+    getCachedAppSettings(),
     prisma.dailyActivity.findMany({
       where: { userId: session.userId },
       orderBy: { dateKey: "desc" },
       take: 60,
+      select: { dateKey: true, studyMinutes: true, activityCount: true },
     }),
     prisma.quizAttempt.findMany({
       where: { userId: session.userId },

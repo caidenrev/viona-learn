@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { getJakartaTodayKey } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { getCachedAppSettings } from "@/lib/cached-settings";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProfileSettingsClient } from "@/components/settings/ProfileSettingsClient";
@@ -13,9 +14,26 @@ export default async function SettingsPage() {
   if (!session) redirect("/login");
 
   const [user, settings, activities] = await Promise.all([
-    prisma.user.findUnique({ where: { id: session.userId } }),
-    prisma.appSettings.findUnique({ where: { id: "default" } }),
-    prisma.dailyActivity.findMany({ where: { userId: session.userId } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        name: true,
+        nickname: true,
+        dreamTarget: true,
+        bio: true,
+        focusWindow: true,
+        avatarUrl: true,
+        username: true,
+        role: true,
+      },
+    }),
+    getCachedAppSettings(),
+    prisma.dailyActivity.findMany({
+      where: { userId: session.userId },
+      orderBy: { dateKey: "desc" },
+      take: 90,
+      select: { dateKey: true },
+    }),
   ]);
 
   if (!user) redirect("/login");
