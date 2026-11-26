@@ -6,8 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { computeRoadmapCourseStates } from "@/lib/progression";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
-import { RibbonTag, WashiCard } from "@/components/ui/PastelPrimitives";
+import { RibbonTag, StickerImage, WashiCard } from "@/components/ui/PastelPrimitives";
 import { ArrowRightIcon, BookStackIcon } from "@/components/icons/CartoonIcons";
+import { STICKERS } from "@/lib/stickers";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,18 @@ export default async function RoadmapsPage() {
             <h1 className="mt-2 font-[family-name:var(--font-gaegu)] text-3xl sm:text-4xl font-bold">
               Semua Roadmap Belajar
             </h1>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <StickerImage
+              src={STICKERS.sheet.backpackPink}
+              alt="Tas Belajar"
+              className="w-14 h-14"
+            />
+            <StickerImage
+              src={STICKERS.welcomeBunny}
+              alt="Kelinci Belajar"
+              className="w-20 h-20"
+            />
           </div>
         </div>
 

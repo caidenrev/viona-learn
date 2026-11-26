@@ -6,8 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { computeRoadmapCourseStates } from "@/lib/progression";
 import { calculateCurrentStreak } from "@/lib/streak";
 import { AppShell } from "@/components/layout/AppShell";
-import { RibbonTag, WashiCard } from "@/components/ui/PastelPrimitives";
+import { RibbonTag, StickerImage, WashiCard } from "@/components/ui/PastelPrimitives";
 import { ArrowRightIcon, CheckRibbonIcon, LockIcon } from "@/components/icons/CartoonIcons";
+import { STICKERS } from "@/lib/stickers";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,16 @@ export default async function RoadmapDetailPage({
         <WashiCard
           tapeColor="lilac"
           title={roadmap.title}
-          badge={<RibbonTag color="butter">{roadmap.levelLabel}</RibbonTag>}
+          badge={
+            <div className="flex items-center gap-2">
+              <StickerImage
+                src={STICKERS.sheet.bunnyBook}
+                alt="Kelinci Buku"
+                className="w-10 h-10"
+              />
+              <RibbonTag color="butter">{roadmap.levelLabel}</RibbonTag>
+            </div>
+          }
         >
           <p className="font-[family-name:var(--font-patrick-hand)] text-lg text-[#534342]">
             {roadmap.description}

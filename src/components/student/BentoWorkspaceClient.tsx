@@ -233,15 +233,23 @@ export function BentoWorkspaceClient({
             )}
           </div>
 
-          <div className="relative shrink-0">
-            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-3xl bg-[#faf7f2] p-3 border-2 border-dashed border-[#eadfd5] rotate-2 flex items-center justify-center shadow-sm">
-              <StickerImage
-                src={STICKERS.welcomeBunny}
-                alt="Kelinci Belajar"
-                className="w-full h-full"
-              />
-            </div>
-          </div>
+          <StickerImage
+            src={STICKERS.sheet.laptopHearts}
+            alt="Laptop Belajar Pastel"
+            className="w-32 h-32 sm:w-40 sm:h-40 shrink-0"
+          />
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-dashed border-[#eadfd5]">
+          <StickerImage
+            src={STICKERS.sheet.buntingFlags}
+            alt="Dekorasi Belajar"
+            className="h-8 w-auto"
+          />
+          <StickerImage
+            src={STICKERS.sheet.ribbonBelajarYuk}
+            alt="Pita Belajar Yuk"
+            className="h-8 w-auto"
+          />
         </div>
       </WashiCard>
 
@@ -416,10 +424,17 @@ export function BentoWorkspaceClient({
             tapeColor="mint"
             title="Kalender Streak"
             badge={
-              <RibbonTag color="butter">
-                <StarIcon filled className="w-3.5 h-3.5 text-[#8e4b49]" />
-                <span>{initialStreak.currentStreak} Hari</span>
-              </RibbonTag>
+              <div className="flex items-center gap-1.5">
+                <StickerImage
+                  src={STICKERS.sheet.stickySemangat}
+                  alt="Semangat Streak"
+                  className="w-8 h-8"
+                />
+                <RibbonTag color="butter">
+                  <StarIcon filled className="w-3.5 h-3.5 text-[#8e4b49]" />
+                  <span>{initialStreak.currentStreak} Hari</span>
+                </RibbonTag>
+              </div>
             }
           >
             <div className="grid grid-cols-7 gap-1.5">
@@ -455,11 +470,18 @@ export function BentoWorkspaceClient({
             tapeColor="pink"
             title="TO-DO LIST"
             badge={
-              <StickerImage
-                src={STICKERS.sheet.todoCirclePink}
-                alt="To Do"
-                className="w-9 h-9"
-              />
+              <div className="flex items-center gap-1.5">
+                <StickerImage
+                  src={STICKERS.sheet.ribbonTodaysGoal}
+                  alt="Target Hari Ini"
+                  className="h-7 w-auto"
+                />
+                <StickerImage
+                  src={STICKERS.sheet.todoCirclePink}
+                  alt="To Do"
+                  className="w-9 h-9"
+                />
+              </div>
             }
           >
             <form onSubmit={addTask} className="flex gap-2 mb-3">
@@ -515,7 +537,14 @@ export function BentoWorkspaceClient({
             title="MY NOTES!"
             className="lined-memo"
             badge={
-              <PencilIcon className="w-5 h-5 text-[#4a3e3d]" />
+              <div className="flex items-center gap-1.5">
+                <StickerImage
+                  src={STICKERS.sheet.myNotesBunny}
+                  alt="Kelinci Catatan"
+                  className="w-9 h-9"
+                />
+                <PencilIcon className="w-5 h-5 text-[#4a3e3d]" />
+              </div>
             }
           >
             <form onSubmit={addQuickNote} className="space-y-2 mb-3">

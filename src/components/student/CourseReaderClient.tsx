@@ -149,7 +149,16 @@ export function CourseReaderClient({
     <WashiCard
       tapeColor="yellow"
       title="Silabus Modul"
-      badge={<RibbonTag color="pink">{progressPct}%</RibbonTag>}
+      badge={
+        <div className="flex items-center gap-1.5">
+          <StickerImage
+            src={STICKERS.sheet.booksRibbon}
+            alt="Buku Pita"
+            className="w-8 h-8"
+          />
+          <RibbonTag color="pink">{progressPct}%</RibbonTag>
+        </div>
+      }
     >
       <div className="mb-3">
         <div className="text-xs font-[family-name:var(--font-mali)] font-bold text-[#8e4b49]">
@@ -248,9 +257,16 @@ export function CourseReaderClient({
               tapeColor="pink"
               title={activeModule.title}
               badge={
-                <RibbonTag color="lilac">
-                  {activeModule.chapterTitle} - {activeModule.estimatedMinutes} Menit
-                </RibbonTag>
+                <div className="flex items-center gap-1.5">
+                  <StickerImage
+                    src={STICKERS.sheet.lamp}
+                    alt="Lampu Belajar"
+                    className="w-8 h-8"
+                  />
+                  <RibbonTag color="lilac">
+                    {activeModule.chapterTitle} - {activeModule.estimatedMinutes} Menit
+                  </RibbonTag>
+                </div>
               }
             >
               {activeModule.videoUrl && (
@@ -302,7 +318,17 @@ export function CourseReaderClient({
 
           {/* Optional Practice Task Submission */}
           {course.hasPracticeTask && (
-            <WashiCard tapeColor="lilac" title="Mini Proyek Praktek">
+            <WashiCard
+              tapeColor="lilac"
+              title="Mini Proyek Praktek"
+              badge={
+                <StickerImage
+                  src={STICKERS.sheet.bearLaptop}
+                  alt="Beruang Ngoding"
+                  className="w-10 h-10"
+                />
+              }
+            >
               <p className="font-[family-name:var(--font-patrick-hand)] text-base text-[#534342] mb-3">
                 {course.practicePrompt ?? "Kirim hasil praktekmu untuk direview mentor."}
               </p>
@@ -448,6 +474,13 @@ export function CourseReaderClient({
             tapeColor="brown"
             title="Catatan Pribadiku"
             className="lined-memo"
+            badge={
+              <StickerImage
+                src={STICKERS.sheet.myNotesBear}
+                alt="Beruang Catatan"
+                className="w-9 h-9"
+              />
+            }
           >
             <form onSubmit={saveQuickNote} className="space-y-2">
               <textarea

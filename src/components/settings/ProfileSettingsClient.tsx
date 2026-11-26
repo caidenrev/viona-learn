@@ -16,6 +16,12 @@ const AVATAR_CHOICES = [
   STICKERS.welcomeBunny,
   STICKERS.pomodoroCat,
   STICKERS.streakStar,
+  STICKERS.sheet.laptopHearts,
+  STICKERS.sheet.bunnyBook,
+  STICKERS.sheet.catFokus,
+  STICKERS.sheet.myNotesBunny,
+  STICKERS.sheet.todoBear,
+  STICKERS.sheet.bearLaptop,
 ];
 
 export function ProfileSettingsClient({

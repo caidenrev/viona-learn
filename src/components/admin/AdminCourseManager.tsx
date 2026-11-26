@@ -10,8 +10,10 @@ import {
 import {
   RibbonTag,
   SquishyButton,
+  StickerImage,
   WashiCard,
 } from "@/components/ui/PastelPrimitives";
+import { STICKERS } from "@/lib/stickers";
 
 export interface AdminCourseListItem {
   id: string;
@@ -249,6 +251,11 @@ export function AdminCourseManager({
       title="Kelola Courses"
       badge={
         <div className="flex flex-wrap items-center gap-2">
+          <StickerImage
+            src={STICKERS.sheet.pencilCase}
+            alt="Kotak Pensil"
+            className="w-9 h-9"
+          />
           <RibbonTag color="butter">{courses.length} Total Course</RibbonTag>
           <SquishyButton
             type="button"

@@ -155,7 +155,18 @@ export function CodePlaygroundClient() {
       </WashiCard>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <WashiCard tapeColor="pink" title="Buku Tulis Editor" className="lg:col-span-6">
+        <WashiCard
+          tapeColor="pink"
+          title="Buku Tulis Editor"
+          badge={
+            <StickerImage
+              src={STICKERS.sheet.catFokus}
+              alt="Kucing Koding"
+              className="w-9 h-9"
+            />
+          }
+          className="lg:col-span-6"
+        >
           <div className="flex flex-wrap gap-2 mb-3">
             {(
               [
@@ -230,9 +241,26 @@ export function CodePlaygroundClient() {
                 }`}
               />
             </div>
+            <div className="mt-3 flex justify-center">
+              <StickerImage
+                src={STICKERS.sheet.bannerBelajarYuk}
+                alt="Banner Belajar Yuk"
+                className="h-7 w-auto"
+              />
+            </div>
           </WashiCard>
 
-          <WashiCard tapeColor="yellow" title="Terminal Konsol Siswa">
+          <WashiCard
+            tapeColor="yellow"
+            title="Terminal Konsol Siswa"
+            badge={
+              <StickerImage
+                src={STICKERS.sheet.headphones}
+                alt="Headphone Fokus"
+                className="w-8 h-8"
+              />
+            }
+          >
             <div className="rounded-2xl bg-[#31302d] text-[#f3f0eb] p-4 font-[family-name:var(--font-jetbrains-mono)] text-xs space-y-1.5 max-h-48 overflow-y-auto">
               {logs.map((entry, idx) => (
                 <div key={idx} className="break-words">

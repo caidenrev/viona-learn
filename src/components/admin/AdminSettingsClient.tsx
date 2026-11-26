@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
-import { SquishyButton, WashiCard, RibbonTag } from "@/components/ui/PastelPrimitives";
+import {
+  SquishyButton,
+  StickerImage,
+  WashiCard,
+  RibbonTag,
+} from "@/components/ui/PastelPrimitives";
+import { STICKERS } from "@/lib/stickers";
 
 export function AdminSettingsClient({
   initialWhatsapp,
@@ -50,7 +56,16 @@ export function AdminSettingsClient({
       <WashiCard
         tapeColor="pink"
         title="Pengaturan Mentor & Tombol Tanya Husband"
-        badge={<RibbonTag color="mint">Khusus Teacher</RibbonTag>}
+        badge={
+          <div className="flex items-center gap-1.5">
+            <StickerImage
+              src={STICKERS.sheet.bowBlue}
+              alt="Pita Biru"
+              className="w-7 h-7"
+            />
+            <RibbonTag color="mint">Khusus Teacher</RibbonTag>
+          </div>
+        }
       >
         <form onSubmit={handleSave} className="space-y-4 max-w-xl">
           <div>

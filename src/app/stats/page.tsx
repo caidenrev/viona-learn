@@ -131,11 +131,18 @@ export default async function StatsPage() {
                 Pantau konsistensi streak harian, nilai mini quiz, dan progres modulmu.
               </p>
             </div>
-            <StickerImage
-              src={STICKERS.streakStar}
-              alt="Bintang Streak"
-              className="w-24 h-24 shrink-0"
-            />
+            <div className="flex items-center gap-2 shrink-0">
+              <StickerImage
+                src={STICKERS.sheet.bowPink}
+                alt="Pita Pink"
+                className="w-12 h-12"
+              />
+              <StickerImage
+                src={STICKERS.streakStar}
+                alt="Bintang Streak"
+                className="w-24 h-24"
+              />
+            </div>
           </div>
         </WashiCard>
 
@@ -245,7 +252,17 @@ export default async function StatsPage() {
           </WashiCard>
 
           <div className="lg:col-span-5 space-y-6">
-            <WashiCard tapeColor="lilac" title="Riwayat Mini Quiz">
+            <WashiCard
+              tapeColor="lilac"
+              title="Riwayat Mini Quiz"
+              badge={
+                <StickerImage
+                  src={STICKERS.sheet.catBooks}
+                  alt="Kucing Buku"
+                  className="w-9 h-9"
+                />
+              }
+            >
               <ul className="space-y-2.5">
                 {attempts.slice(0, 6).map((a) => (
                   <li

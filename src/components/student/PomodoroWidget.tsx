@@ -46,10 +46,21 @@ export function PomodoroWidget() {
       tapeColor="lilac"
       className="bg-[#f7f3ff]"
       badge={
-        <RibbonTag color={mode === "focus" ? "lilac" : "butter"}>
-          <SparkleIcon className="w-3.5 h-3.5" />
-          <span>{mode === "focus" ? "Fokus Yaa!" : "Rehat Dulu"}</span>
-        </RibbonTag>
+        <div className="flex items-center gap-1.5">
+          <StickerImage
+            src={
+              mode === "focus"
+                ? STICKERS.sheet.alarmClock
+                : STICKERS.sheet.bubbleRehatDulu
+            }
+            alt={mode === "focus" ? "Jam Fokus" : "Rehat Dulu"}
+            className="h-7 w-auto"
+          />
+          <RibbonTag color={mode === "focus" ? "lilac" : "butter"}>
+            <SparkleIcon className="w-3.5 h-3.5" />
+            <span>{mode === "focus" ? "Fokus Yaa!" : "Rehat Dulu"}</span>
+          </RibbonTag>
+        </div>
       }
     >
       <div className="flex items-center justify-between gap-3">
@@ -64,8 +75,12 @@ export function PomodoroWidget() {
           </p>
         </div>
         <StickerImage
-          src={STICKERS.pomodoroCat}
-          alt="Kucing Fokus"
+          src={
+            mode === "focus"
+              ? STICKERS.pomodoroCat
+              : STICKERS.sheet.coffeeSemangat
+          }
+          alt={mode === "focus" ? "Kucing Fokus" : "Kopi Semangat"}
           className="w-20 h-20 shrink-0"
         />
       </div>

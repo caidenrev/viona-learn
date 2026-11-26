@@ -167,11 +167,18 @@ export function NotesTasksClient({
               Ruang arsip catatan harian, daftar target tugas, dan hasil review tugas praktek.
             </p>
           </div>
-          <StickerImage
-            src={STICKERS.notesBearMemo}
-            alt="Beruang Catatan"
-            className="w-24 h-24 shrink-0"
-          />
+          <div className="flex items-center gap-2 shrink-0">
+            <StickerImage
+              src={STICKERS.sheet.bunnyPencil}
+              alt="Kelinci Pensil"
+              className="w-16 h-16"
+            />
+            <StickerImage
+              src={STICKERS.notesBearMemo}
+              alt="Beruang Catatan"
+              className="w-24 h-24"
+            />
+          </div>
         </div>
       </WashiCard>
 
@@ -232,7 +239,24 @@ export function NotesTasksClient({
         {(tab === "ALL" || tab === "TASKS" || tab === "SUBMISSIONS") && (
           <div className="lg:col-span-6 space-y-6 min-w-0">
             {(tab === "ALL" || tab === "TASKS") && (
-              <WashiCard tapeColor="mint" title="Daftar Target & To-Do">
+              <WashiCard
+                tapeColor="mint"
+                title="Daftar Target & To-Do"
+                badge={
+                  <div className="flex items-center gap-1.5">
+                    <StickerImage
+                      src={STICKERS.sheet.todoCircleLilac}
+                      alt="Target Lilac"
+                      className="w-8 h-8"
+                    />
+                    <StickerImage
+                      src={STICKERS.sheet.todoBear}
+                      alt="Beruang To-Do"
+                      className="w-9 h-9"
+                    />
+                  </div>
+                }
+              >
                 <form onSubmit={addTask} className="space-y-3 mb-4">
                   <input
                     type="text"
@@ -309,7 +333,17 @@ export function NotesTasksClient({
             )}
 
             {(tab === "ALL" || tab === "SUBMISSIONS") && submissions.length > 0 && (
-              <WashiCard tapeColor="lilac" title="Status Tugas Praktek">
+              <WashiCard
+                tapeColor="lilac"
+                title="Status Tugas Praktek"
+                badge={
+                  <StickerImage
+                    src={STICKERS.sheet.backpackPink}
+                    alt="Tas Belajar"
+                    className="w-9 h-9"
+                  />
+                }
+              >
                 <div className="space-y-3">
                   {submissions.map((sub) => (
                     <div
@@ -346,7 +380,16 @@ export function NotesTasksClient({
             <WashiCard
               tapeColor="yellow"
               title="Koleksi Catatan Belajarku"
-              badge={<PencilIcon className="w-5 h-5" />}
+              badge={
+                <div className="flex items-center gap-1.5">
+                  <StickerImage
+                    src={STICKERS.sheet.bowBlue}
+                    alt="Pita Biru"
+                    className="w-7 h-7"
+                  />
+                  <PencilIcon className="w-5 h-5" />
+                </div>
+              }
             >
               <input
                 type="search"
