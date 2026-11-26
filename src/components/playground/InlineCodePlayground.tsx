@@ -177,7 +177,7 @@ export function InlineCodePlayground({
             title={`Pratinjau ${blockTitle}`}
             sandbox="allow-scripts"
             srcDoc={srcDoc}
-            className="w-full h-40 rounded-2xl bg-white border-2 border-[#eadfd5]"
+            className="w-full min-h-[240px] sm:min-h-[260px] rounded-2xl bg-white border border-[#eadfd5]"
           />
           {logs.length > 0 && (
             <div className="rounded-xl bg-[#31302d] text-[#f3f0eb] px-3 py-2 font-[family-name:var(--font-jetbrains-mono)] text-[11px] max-h-20 overflow-y-auto">

@@ -22,24 +22,25 @@ const STARTER_HTML = `<div class="kartu">
   </div>
 </div>`;
 
-const STARTER_CSS = `body {
+const STARTER_CSS = `* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
   font-family: sans-serif;
-  background: #fcf9f4;
-  display: flex;
-  justify-content: center;
-  padding: 24px;
+  background: #ffffff;
   color: #4a3e3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 .kartu {
-  background: #ffffff;
-  border: 2px dashed #eadfd5;
-  border-radius: 24px;
-  padding: 24px;
-  text-align: center;
-  max-width: 300px;
   width: 100%;
+  max-width: 340px;
+  text-align: center;
 }
 .badge {
+  display: inline-block;
   background: #FFAAA6;
   padding: 4px 12px;
   border-radius: 999px;
@@ -231,16 +232,16 @@ export function CodePlaygroundClient() {
               </div>
             }
           >
-            <div className="flex justify-center bg-[#faf7f2] rounded-2xl p-3 border border-[#eadfd5]">
-              <iframe
-                title="Playground Preview"
-                sandbox="allow-scripts"
-                srcDoc={srcDoc}
-                className={`h-72 rounded-2xl bg-white border border-[#eadfd5] transition-all ${
-                  previewWidth === "mobile" ? "w-[320px] max-w-full" : "w-full"
-                }`}
-              />
-            </div>
+            <iframe
+              title="Playground Preview"
+              sandbox="allow-scripts"
+              srcDoc={srcDoc}
+              className={`block h-[380px] sm:h-[420px] rounded-2xl bg-white border border-[#eadfd5] transition-all ${
+                previewWidth === "mobile"
+                  ? "w-full sm:w-[360px] mx-auto"
+                  : "w-full"
+              }`}
+            />
             <div className="mt-3 flex justify-center">
               <StickerImage
                 src={STICKERS.sheet.bannerBelajarYuk}
