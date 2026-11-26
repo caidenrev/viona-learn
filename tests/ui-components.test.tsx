@@ -8,6 +8,7 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { LessonRenderer } from "@/components/editor/LessonRenderer";
 import { AchievementBadgesCard } from "@/components/student/AchievementBadgesCard";
+import { AdminCourseManager } from "@/components/admin/AdminCourseManager";
 import { computeAchievements } from "@/lib/achievements";
 import { findEmojiViolations } from "@/lib/emoji-guard";
 
@@ -117,6 +118,36 @@ describe("Kawaii stationery UI primitives", () => {
     expect(html).toContain("Koleksi Lencana Hirono");
     expect(html).toContain("2 / 6 Tercapai");
     expect(html).toContain("/stickers/hirono.png");
+    expect(findEmojiViolations(html)).toEqual([]);
+  });
+
+  it("renders AdminCourseManager with CRUD controls and zero emojis", () => {
+    const html = renderToStaticMarkup(
+      <AdminCourseManager
+        roadmaps={[{ id: "rm-1", title: "Fullstack & AI" }]}
+        courses={[
+          {
+            id: "c-1",
+            roadmapId: "rm-1",
+            roadmapTitle: "Fullstack & AI",
+            title: "HTML & CSS Pastel",
+            slug: "html-css-pastel",
+            summary: "Belajar layout pastel.",
+            status: "PUBLISHED",
+            orderIndex: 1,
+            passingScore: 70,
+            targetDate: null,
+            moduleCount: 3,
+            quizCount: 2,
+          },
+        ]}
+        onCoursesChange={() => {}}
+      />
+    );
+    expect(html).toContain("Kelola Courses");
+    expect(html).toContain("HTML &amp; CSS Pastel");
+    expect(html).toContain("Edit");
+    expect(html).toContain("Hapus");
     expect(findEmojiViolations(html)).toEqual([]);
   });
 });

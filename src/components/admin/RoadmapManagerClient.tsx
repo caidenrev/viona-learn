@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   ArrowRightIcon,
   BookStackIcon,
+  PencilIcon,
 } from "@/components/icons/CartoonIcons";
 import {
   RibbonTag,
@@ -47,6 +48,15 @@ export function RoadmapManagerClient({
   const [courseDrafts, setCourseDrafts] = useState<
     Record<string, { title: string; summary: string }>
   >({});
+  const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
+  const [editCourseTitle, setEditCourseTitle] = useState("");
+  const [editCourseSummary, setEditCourseSummary] = useState("");
+  const [editCourseStatus, setEditCourseStatus] = useState<"DRAFT" | "PUBLISHED">(
+    "DRAFT"
+  );
+  const [confirmDeleteCourseId, setConfirmDeleteCourseId] = useState<string | null>(
+    null
+  );
 
   async function createRoadmap(e: React.FormEvent) {
     e.preventDefault();
@@ -118,6 +128,68 @@ export function RoadmapManagerClient({
         ...prev,
         [roadmapId]: { title: "", summary: "" },
       }));
+    }
+  }
+
+  function startEditCourse(course: CourseItem) {
+    setEditingCourseId(course.id);
+    setEditCourseTitle(course.title);
+    setEditCourseSummary(course.summary);
+    setEditCourseStatus(course.status);
+    setConfirmDeleteCourseId(null);
+  }
+
+  async function saveCourseEdit(roadmapId: string, courseId: string, e: React.FormEvent) {
+    e.preventDefault();
+    if (!editCourseTitle.trim() || !editCourseSummary.trim()) return;
+    const res = await fetch(`/api/admin/courses/${courseId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: editCourseTitle.trim(),
+        summary: editCourseSummary.trim(),
+        status: editCourseStatus,
+      }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setRoadmaps((prev) =>
+        prev.map((r) =>
+          r.id === roadmapId
+            ? {
+                ...r,
+                courses: r.courses.map((c) =>
+                  c.id === courseId
+                    ? {
+                        ...c,
+                        title: data.course.title,
+                        summary: data.course.summary,
+                        status: data.course.status,
+                      }
+                    : c
+                ),
+              }
+            : r
+        )
+      );
+      setEditingCourseId(null);
+    }
+  }
+
+  async function deleteCourse(roadmapId: string, courseId: string) {
+    const res = await fetch(`/api/admin/courses/${courseId}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      setRoadmaps((prev) =>
+        prev.map((r) =>
+          r.id === roadmapId
+            ? { ...r, courses: r.courses.filter((c) => c.id !== courseId) }
+            : r
+        )
+      );
+      setConfirmDeleteCourseId(null);
+      if (editingCourseId === courseId) setEditingCourseId(null);
     }
   }
 
@@ -194,30 +266,120 @@ export function RoadmapManagerClient({
                 {rm.courses.map((course) => (
                   <div
                     key={course.id}
-                    className="rounded-2xl bg-[#faf7f2] p-3.5 border border-[#eadfd5] flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="rounded-2xl bg-[#faf7f2] p-3.5 border border-[#eadfd5] space-y-2.5"
                   >
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <strong className="font-[family-name:var(--font-gaegu)] text-xl">
-                          {course.title}
-                        </strong>
-                        <RibbonTag
-                          color={course.status === "PUBLISHED" ? "mint" : "butter"}
-                        >
-                          {course.status}
-                        </RibbonTag>
+                    {editingCourseId === course.id ? (
+                      <form
+                        onSubmit={(e) => saveCourseEdit(rm.id, course.id, e)}
+                        className="space-y-2.5"
+                      >
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                          <input
+                            type="text"
+                            required
+                            value={editCourseTitle}
+                            onChange={(e) => setEditCourseTitle(e.target.value)}
+                            placeholder="Judul Course"
+                            className="sm:col-span-2 min-h-[44px] rounded-2xl bg-white border border-[#eadfd5] px-3 font-[family-name:var(--font-patrick-hand)] text-base"
+                          />
+                          <select
+                            value={editCourseStatus}
+                            onChange={(e) =>
+                              setEditCourseStatus(
+                                e.target.value as "DRAFT" | "PUBLISHED"
+                              )
+                            }
+                            className="min-h-[44px] rounded-2xl bg-white border border-[#eadfd5] px-3 font-[family-name:var(--font-mali)] text-xs font-bold"
+                          >
+                            <option value="DRAFT">DRAFT</option>
+                            <option value="PUBLISHED">PUBLISHED</option>
+                          </select>
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={editCourseSummary}
+                          onChange={(e) => setEditCourseSummary(e.target.value)}
+                          placeholder="Ringkasan Course"
+                          className="w-full min-h-[44px] rounded-2xl bg-white border border-[#eadfd5] px-3 font-[family-name:var(--font-patrick-hand)] text-base"
+                        />
+                        <div className="flex flex-wrap gap-2">
+                          <SquishyButton type="submit" variant="primary">
+                            Simpan Course
+                          </SquishyButton>
+                          <SquishyButton
+                            type="button"
+                            variant="outline"
+                            onClick={() => setEditingCourseId(null)}
+                          >
+                            Batal
+                          </SquishyButton>
+                        </div>
+                      </form>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <strong className="font-[family-name:var(--font-gaegu)] text-xl">
+                              {course.title}
+                            </strong>
+                            <RibbonTag
+                              color={
+                                course.status === "PUBLISHED" ? "mint" : "butter"
+                              }
+                            >
+                              {course.status}
+                            </RibbonTag>
+                          </div>
+                          <p className="font-[family-name:var(--font-patrick-hand)] text-sm text-[#534342]">
+                            {course.summary}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => startEditCourse(course)}
+                            className="min-h-[40px] px-3 rounded-full bg-[#FFF3B0] border border-[#e2d38b] inline-flex items-center gap-1.5 font-[family-name:var(--font-mali)] text-xs font-bold text-[#4a3e3d] cursor-pointer"
+                          >
+                            <PencilIcon className="w-3.5 h-3.5" />
+                            <span>Edit</span>
+                          </button>
+                          {confirmDeleteCourseId === course.id ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => deleteCourse(rm.id, course.id)}
+                                className="min-h-[40px] px-3 rounded-full bg-[#ba1a1a] text-white font-[family-name:var(--font-mali)] text-xs font-bold cursor-pointer"
+                              >
+                                Yakin Hapus?
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setConfirmDeleteCourseId(null)}
+                                className="min-h-[40px] px-3 rounded-full bg-white border border-[#eadfd5] font-[family-name:var(--font-mali)] text-xs font-bold text-[#534342] cursor-pointer"
+                              >
+                                Batal
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setConfirmDeleteCourseId(course.id)}
+                              className="min-h-[40px] px-3 rounded-full bg-[#ffdad6] font-[family-name:var(--font-mali)] text-xs font-bold text-[#93000a] cursor-pointer"
+                            >
+                              Hapus
+                            </button>
+                          )}
+                          <Link
+                            href={`/admin/courses/${course.id}`}
+                            className="squishy-btn inline-flex items-center gap-1.5 rounded-full bg-[#C8B6FF] text-[#200d4e] px-4 py-2 min-h-[40px] font-[family-name:var(--font-mali)] text-xs font-bold shrink-0"
+                          >
+                            <span>Buka Studio Materi &amp; Quiz</span>
+                            <ArrowRightIcon className="w-3.5 h-3.5" />
+                          </Link>
+                        </div>
                       </div>
-                      <p className="font-[family-name:var(--font-patrick-hand)] text-sm text-[#534342]">
-                        {course.summary}
-                      </p>
-                    </div>
-                    <Link
-                      href={`/admin/courses/${course.id}`}
-                      className="squishy-btn inline-flex items-center gap-1.5 rounded-full bg-[#C8B6FF] text-[#200d4e] px-4 py-2 min-h-[44px] font-[family-name:var(--font-mali)] text-xs font-bold shrink-0"
-                    >
-                      <span>Buka Studio Materi &amp; Quiz</span>
-                      <ArrowRightIcon className="w-3.5 h-3.5" />
-                    </Link>
+                    )}
                   </div>
                 ))}
               </div>

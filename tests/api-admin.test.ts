@@ -114,4 +114,50 @@ describe("admin API routes", () => {
     expect(overview).not.toHaveProperty("workspaceTasks");
     expect(overview).not.toHaveProperty("notes");
   });
+
+  it("allows TEACHER to update and delete a course", async () => {
+    mockRequireRole.mockResolvedValue({
+      userId: "t1",
+      username: "mentor",
+      name: "Mentor",
+      role: "TEACHER",
+    });
+    mockPrisma.course.update.mockResolvedValue({
+      id: "c1",
+      roadmapId: "r1",
+      title: "React Dasar Updated",
+      summary: "Ringkasan baru",
+      status: "PUBLISHED",
+      passingScore: 80,
+      targetDate: null,
+      roadmap: { id: "r1", title: "Frontend" },
+      _count: { modules: 2, quizQuestions: 3 },
+    });
+    mockPrisma.course.delete.mockResolvedValue({ id: "c1" });
+
+    const { PATCH, DELETE } = await import("@/app/api/admin/courses/[id]/route");
+    const patchRes = await PATCH(
+      new Request("http://localhost/api/admin/courses/c1", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "React Dasar Updated",
+          summary: "Ringkasan baru",
+          status: "PUBLISHED",
+          passingScore: 80,
+        }),
+      }),
+      { params: Promise.resolve({ id: "c1" }) }
+    );
+    expect(patchRes.status).toBe(200);
+    const patchData = await patchRes.json();
+    expect(patchData.course.title).toBe("React Dasar Updated");
+
+    const delRes = await DELETE(
+      new Request("http://localhost/api/admin/courses/c1", { method: "DELETE" }),
+      { params: Promise.resolve({ id: "c1" }) }
+    );
+    expect(delRes.status).toBe(200);
+    expect(mockPrisma.course.delete).toHaveBeenCalledWith({ where: { id: "c1" } });
+  });
 });

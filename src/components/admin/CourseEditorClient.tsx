@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LessonRenderer } from "@/components/editor/LessonRenderer";
 import { RichTextEditor } from "@/components/editor/RichTextEditor";
@@ -45,7 +46,9 @@ export function CourseEditorClient({
   initialModules: AdminModule[];
   initialQuiz: QuizBuilderQuestion[];
 }) {
+  const router = useRouter();
   const [title, setTitle] = useState(course.title);
+  const [confirmDeleteCourse, setConfirmDeleteCourse] = useState(false);
   const [summary, setSummary] = useState(course.summary);
   const [thumbnailUrl, setThumbnailUrl] = useState(course.thumbnailUrl ?? "");
   const [targetDate, setTargetDate] = useState(
@@ -108,6 +111,18 @@ export function CourseEditorClient({
     });
     if (res.ok) {
       setCourseMsg("Perubahan course tersimpan!");
+    }
+  }
+
+  async function deleteCurrentCourse() {
+    const res = await fetch(`/api/admin/courses/${course.id}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      router.push("/admin");
+      router.refresh();
+    } else {
+      setCourseMsg("Gagal menghapus course.");
     }
   }
 
@@ -277,6 +292,32 @@ export function CourseEditorClient({
             <SquishyButton type="submit" variant="primary">
               Simpan Detail Course
             </SquishyButton>
+            {confirmDeleteCourse ? (
+              <div className="inline-flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={deleteCurrentCourse}
+                  className="min-h-[44px] px-4 rounded-full bg-[#ba1a1a] text-white font-[family-name:var(--font-mali)] text-xs font-bold cursor-pointer"
+                >
+                  Yakin Hapus Course Ini?
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeleteCourse(false)}
+                  className="min-h-[44px] px-4 rounded-full bg-[#f0ede9] font-[family-name:var(--font-mali)] text-xs font-bold text-[#4a3e3d] cursor-pointer"
+                >
+                  Batal
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmDeleteCourse(true)}
+                className="min-h-[44px] px-4 rounded-full bg-[#ffdad6] hover:bg-[#ffc6bf] font-[family-name:var(--font-mali)] text-xs font-bold text-[#93000a] cursor-pointer"
+              >
+                Hapus Course
+              </button>
+            )}
             {courseMsg && (
               <span className="font-[family-name:var(--font-mali)] text-xs font-bold text-[#436468]">
                 {courseMsg}

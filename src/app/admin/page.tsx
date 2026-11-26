@@ -13,35 +13,50 @@ export default async function AdminPage() {
   if (!session) redirect("/login");
   if (session.role !== "TEACHER") redirect("/workspace");
 
-  const [teacher, student, settings, courses, submissions, ratings, attempts, mentorNotes] =
-    await Promise.all([
-      prisma.user.findUnique({ where: { id: session.userId } }),
-      prisma.user.findUnique({ where: { role: "STUDENT" } }),
-      prisma.appSettings.findUnique({ where: { id: "default" } }),
-      prisma.course.findMany({
-        where: { status: "PUBLISHED" },
-        include: {
-          courseProgresses: true,
-        },
-      }),
-      prisma.courseSubmission.findMany({
-        orderBy: { updatedAt: "desc" },
-        include: { course: { select: { title: true } } },
-      }),
-      prisma.courseRating.findMany({
-        orderBy: { updatedAt: "desc" },
-        include: { course: { select: { title: true } } },
-      }),
-      prisma.quizAttempt.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 15,
-        include: { course: { select: { title: true } } },
-      }),
-      prisma.mentorPrivateNote.findMany({
-        where: { authorId: session.userId },
-        orderBy: { updatedAt: "desc" },
-      }),
-    ]);
+  const [
+    teacher,
+    student,
+    settings,
+    roadmaps,
+    courses,
+    submissions,
+    ratings,
+    attempts,
+    mentorNotes,
+  ] = await Promise.all([
+    prisma.user.findUnique({ where: { id: session.userId } }),
+    prisma.user.findUnique({ where: { role: "STUDENT" } }),
+    prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.roadmap.findMany({
+      orderBy: { orderIndex: "asc" },
+      select: { id: true, title: true },
+    }),
+    prisma.course.findMany({
+      orderBy: [{ roadmap: { orderIndex: "asc" } }, { orderIndex: "asc" }],
+      include: {
+        roadmap: { select: { id: true, title: true } },
+        courseProgresses: true,
+        _count: { select: { modules: true, quizQuestions: true } },
+      },
+    }),
+    prisma.courseSubmission.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: { course: { select: { title: true } } },
+    }),
+    prisma.courseRating.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: { course: { select: { title: true } } },
+    }),
+    prisma.quizAttempt.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 15,
+      include: { course: { select: { title: true } } },
+    }),
+    prisma.mentorPrivateNote.findMany({
+      where: { authorId: session.userId },
+      orderBy: { updatedAt: "desc" },
+    }),
+  ]);
 
   const activities = student
     ? await prisma.dailyActivity.findMany({
@@ -56,7 +71,8 @@ export default async function AdminPage() {
     getJakartaTodayKey()
   );
 
-  const passedCourseCount = courses.filter((c) =>
+  const publishedCourses = courses.filter((c) => c.status === "PUBLISHED");
+  const passedCourseCount = publishedCourses.filter((c) =>
     c.courseProgresses.some((p) => p.status === "PASSED")
   ).length;
 
@@ -73,7 +89,22 @@ export default async function AdminPage() {
         studentName={student?.nickname || student?.name || "Siswa"}
         streakDays={streak.currentStreak}
         passedCourseCount={passedCourseCount}
-        totalCourseCount={courses.length}
+        totalCourseCount={publishedCourses.length}
+        initialRoadmaps={roadmaps}
+        initialCourses={courses.map((c) => ({
+          id: c.id,
+          roadmapId: c.roadmapId,
+          roadmapTitle: c.roadmap.title,
+          title: c.title,
+          slug: c.slug,
+          summary: c.summary,
+          status: c.status,
+          orderIndex: c.orderIndex,
+          passingScore: c.passingScore,
+          targetDate: c.targetDate ? c.targetDate.toISOString() : null,
+          moduleCount: c._count.modules,
+          quizCount: c._count.quizQuestions,
+        }))}
         initialSubmissions={submissions.map((s) => ({
           id: s.id,
           courseTitle: s.course.title,

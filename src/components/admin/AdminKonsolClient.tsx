@@ -14,6 +14,11 @@ import {
   type SubmissionReviewTarget,
 } from "@/components/admin/RubricGradingModal";
 import {
+  AdminCourseManager,
+  type AdminCourseListItem,
+  type AdminRoadmapOption,
+} from "@/components/admin/AdminCourseManager";
+import {
   RibbonTag,
   SquishyButton,
   StickerImage,
@@ -32,6 +37,8 @@ export function AdminKonsolClient({
   streakDays,
   passedCourseCount,
   totalCourseCount,
+  initialRoadmaps,
+  initialCourses,
   initialSubmissions,
   ratings,
   quizAttempts,
@@ -41,6 +48,8 @@ export function AdminKonsolClient({
   streakDays: number;
   passedCourseCount: number;
   totalCourseCount: number;
+  initialRoadmaps: AdminRoadmapOption[];
+  initialCourses: AdminCourseListItem[];
   initialSubmissions: SubmissionReviewTarget[];
   ratings: Array<{
     id: string;
@@ -56,6 +65,7 @@ export function AdminKonsolClient({
   }>;
   initialMentorNotes: MentorNoteItem[];
 }) {
+  const [courses, setCourses] = useState(initialCourses);
   const [submissions, setSubmissions] = useState(initialSubmissions);
   const [activeSubmission, setActiveSubmission] =
     useState<SubmissionReviewTarget | null>(null);
@@ -64,6 +74,9 @@ export function AdminKonsolClient({
   const [noteBody, setNoteBody] = useState("");
 
   const pendingCount = submissions.filter((s) => s.status === "PENDING").length;
+  const publishedCourseCount = courses.filter((c) => c.status === "PUBLISHED").length;
+  const displayTotalCourseCount =
+    courses.length > 0 ? publishedCourseCount : totalCourseCount;
 
   async function addMentorNote(e: React.FormEvent) {
     e.preventDefault();
@@ -140,7 +153,7 @@ export function AdminKonsolClient({
             Kelulusan Course Siswa
           </div>
           <div className="font-[family-name:var(--font-gaegu)] text-3xl font-bold mt-1">
-            {passedCourseCount} / {totalCourseCount} Course
+            {passedCourseCount} / {displayTotalCourseCount} Course
           </div>
         </WashiCard>
 
@@ -156,6 +169,12 @@ export function AdminKonsolClient({
           </div>
         </WashiCard>
       </div>
+
+      <AdminCourseManager
+        roadmaps={initialRoadmaps}
+        courses={courses}
+        onCoursesChange={setCourses}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <div className="lg:col-span-7 space-y-6">

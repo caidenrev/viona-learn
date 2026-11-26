@@ -5,6 +5,7 @@ import { handleApiError } from "@/lib/api-helpers";
 import { prisma } from "@/lib/prisma";
 
 const updateCourseSchema = z.object({
+  roadmapId: z.string().min(1).optional(),
   title: z.string().trim().min(1).max(140).optional(),
   summary: z.string().trim().min(1).optional(),
   thumbnailUrl: z.string().trim().nullable().optional(),
@@ -52,6 +53,7 @@ export async function PATCH(
     const course = await prisma.course.update({
       where: { id },
       data: {
+        ...(data.roadmapId !== undefined ? { roadmapId: data.roadmapId } : {}),
         ...(data.title !== undefined ? { title: data.title } : {}),
         ...(data.summary !== undefined ? { summary: data.summary } : {}),
         ...(data.thumbnailUrl !== undefined ? { thumbnailUrl: data.thumbnailUrl } : {}),
@@ -67,6 +69,10 @@ export async function PATCH(
         ...(data.practicePrompt !== undefined
           ? { practicePrompt: data.practicePrompt }
           : {}),
+      },
+      include: {
+        roadmap: { select: { id: true, title: true } },
+        _count: { select: { modules: true, quizQuestions: true } },
       },
     });
     return NextResponse.json({ course });

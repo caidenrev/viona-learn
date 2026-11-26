@@ -39,6 +39,10 @@ export async function POST(req: Request) {
         hasPracticeTask: data.hasPracticeTask ?? false,
         practicePrompt: data.practicePrompt ?? null,
       },
+      include: {
+        roadmap: { select: { id: true, title: true } },
+        _count: { select: { modules: true, quizQuestions: true } },
+      },
     });
     return NextResponse.json({ course }, { status: 201 });
   } catch (err) {
