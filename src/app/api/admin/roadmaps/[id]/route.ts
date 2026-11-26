@@ -5,6 +5,7 @@ import { handleApiError } from "@/lib/api-helpers";
 import { prisma } from "@/lib/prisma";
 
 const updateRoadmapSchema = z.object({
+  playlistId: z.string().min(1).nullable().optional(),
   title: z.string().trim().min(1).max(120).optional(),
   description: z.string().trim().min(1).optional(),
   levelLabel: z.string().trim().min(1).max(60).optional(),
@@ -25,6 +26,7 @@ export async function PATCH(
     const roadmap = await prisma.roadmap.update({
       where: { id },
       data: {
+        ...(data.playlistId !== undefined ? { playlistId: data.playlistId } : {}),
         ...(data.title !== undefined ? { title: data.title } : {}),
         ...(data.description !== undefined ? { description: data.description } : {}),
         ...(data.levelLabel !== undefined ? { levelLabel: data.levelLabel } : {}),
@@ -33,6 +35,9 @@ export async function PATCH(
           : {}),
         ...(data.status !== undefined ? { status: data.status } : {}),
         ...(data.orderIndex !== undefined ? { orderIndex: data.orderIndex } : {}),
+      },
+      include: {
+        playlist: { select: { id: true, title: true, slug: true, color: true } },
       },
     });
     return NextResponse.json({ roadmap });

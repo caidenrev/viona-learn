@@ -20,6 +20,7 @@ export default async function WorkspacePage() {
   const [
     user,
     settings,
+    playlists,
     roadmaps,
     courseProgresses,
     moduleProgresses,
@@ -31,10 +32,27 @@ export default async function WorkspacePage() {
   ] = await Promise.all([
     prisma.user.findUnique({ where: { id: session.userId } }),
     prisma.appSettings.findUnique({ where: { id: "default" } }),
-    prisma.roadmap.findMany({
+    prisma.playlist.findMany({
       where: { status: "PUBLISHED" },
+      orderBy: [{ orderIndex: "asc" }, { createdAt: "asc" }],
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        color: true,
+      },
+    }),
+    prisma.roadmap.findMany({
+      where: {
+        status: "PUBLISHED",
+        OR: [{ playlistId: null }, { playlist: { status: "PUBLISHED" } }],
+      },
       orderBy: { orderIndex: "asc" },
       include: {
+        playlist: {
+          select: { id: true, title: true, slug: true, color: true },
+        },
         courses: {
           where: { status: "PUBLISHED" },
           orderBy: { orderIndex: "asc" },
@@ -88,6 +106,8 @@ export default async function WorkspacePage() {
       slug: rm.slug,
       description: rm.description,
       levelLabel: rm.levelLabel,
+      playlistId: rm.playlistId,
+      playlist: rm.playlist,
       courses: rm.courses.map((c) => ({
         id: c.id,
         title: c.title,
@@ -136,6 +156,7 @@ export default async function WorkspacePage() {
         todayKey={todayKey}
         initialStreak={streak}
         achievements={achievements}
+        playlists={playlists}
         roadmaps={serializedRoadmaps}
         initialTasks={tasks.map((t) => ({
           id: t.id,

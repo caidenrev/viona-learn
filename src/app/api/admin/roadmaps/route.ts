@@ -5,6 +5,7 @@ import { handleApiError, slugify } from "@/lib/api-helpers";
 import { prisma } from "@/lib/prisma";
 
 const createRoadmapSchema = z.object({
+  playlistId: z.string().min(1).nullable().optional(),
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().min(1),
   levelLabel: z.string().trim().min(1).max(60).optional(),
@@ -19,6 +20,7 @@ export async function GET() {
     const roadmaps = await prisma.roadmap.findMany({
       orderBy: { orderIndex: "asc" },
       include: {
+        playlist: { select: { id: true, title: true, slug: true, color: true } },
         courses: {
           orderBy: { orderIndex: "asc" },
           include: {
@@ -43,6 +45,7 @@ export async function POST(req: Request) {
 
     const roadmap = await prisma.roadmap.create({
       data: {
+        playlistId: data.playlistId ?? null,
         title: data.title,
         slug,
         description: data.description,
@@ -50,6 +53,9 @@ export async function POST(req: Request) {
         targetDate: data.targetDate ? new Date(data.targetDate) : null,
         status: data.status ?? "DRAFT",
         orderIndex: data.orderIndex ?? 0,
+      },
+      include: {
+        playlist: { select: { id: true, title: true, slug: true, color: true } },
       },
     });
     return NextResponse.json({ roadmap }, { status: 201 });

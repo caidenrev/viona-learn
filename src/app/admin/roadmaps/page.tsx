@@ -13,13 +13,22 @@ export default async function AdminRoadmapsPage() {
   if (!session) redirect("/login");
   if (session.role !== "TEACHER") redirect("/workspace");
 
-  const [teacher, student, settings, roadmaps] = await Promise.all([
+  const [teacher, student, settings, playlists, roadmaps] = await Promise.all([
     prisma.user.findUnique({ where: { id: session.userId } }),
     prisma.user.findUnique({ where: { role: "STUDENT" } }),
     prisma.appSettings.findUnique({ where: { id: "default" } }),
+    prisma.playlist.findMany({
+      orderBy: [{ orderIndex: "asc" }, { createdAt: "asc" }],
+      include: {
+        _count: { select: { roadmaps: true } },
+      },
+    }),
     prisma.roadmap.findMany({
       orderBy: { orderIndex: "asc" },
       include: {
+        playlist: {
+          select: { id: true, title: true, slug: true, color: true },
+        },
         courses: { orderBy: { orderIndex: "asc" } },
       },
     }),
@@ -43,6 +52,16 @@ export default async function AdminRoadmapsPage() {
       siteTitle={settings?.siteTitle ?? "Viona Learn"}
     >
       <RoadmapManagerClient
+        initialPlaylists={playlists.map((p) => ({
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+          description: p.description,
+          color: p.color,
+          status: p.status,
+          orderIndex: p.orderIndex,
+          _count: p._count,
+        }))}
         initialRoadmaps={roadmaps.map((r) => ({
           id: r.id,
           title: r.title,
@@ -51,6 +70,8 @@ export default async function AdminRoadmapsPage() {
           levelLabel: r.levelLabel,
           status: r.status,
           orderIndex: r.orderIndex,
+          playlistId: r.playlistId,
+          playlist: r.playlist,
           courses: r.courses.map((c) => ({
             id: c.id,
             title: c.title,

@@ -7,11 +7,19 @@ import { computeRoadmapCourseStates } from "@/lib/progression";
 export async function GET() {
   try {
     const student = await requireRole("STUDENT");
-    const [roadmaps, progresses] = await Promise.all([
-      prisma.roadmap.findMany({
+    const [playlists, roadmaps, progresses] = await Promise.all([
+      prisma.playlist.findMany({
         where: { status: "PUBLISHED" },
         orderBy: { orderIndex: "asc" },
+      }),
+      prisma.roadmap.findMany({
+        where: {
+          status: "PUBLISHED",
+          OR: [{ playlistId: null }, { playlist: { status: "PUBLISHED" } }],
+        },
+        orderBy: { orderIndex: "asc" },
         include: {
+          playlist: { select: { id: true, title: true, slug: true, color: true } },
           courses: {
             where: { status: "PUBLISHED" },
             orderBy: { orderIndex: "asc" },
@@ -41,7 +49,7 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ roadmaps: data });
+    return NextResponse.json({ playlists, roadmaps: data });
   } catch (err) {
     return handleApiError(err);
   }

@@ -33,9 +33,15 @@ export async function GET() {
       }),
       prisma.appSettings.findUnique({ where: { id: "default" } }),
       prisma.roadmap.findMany({
-        where: { status: "PUBLISHED" },
+        where: {
+          status: "PUBLISHED",
+          OR: [{ playlistId: null }, { playlist: { status: "PUBLISHED" } }],
+        },
         orderBy: { orderIndex: "asc" },
         include: {
+          playlist: {
+            select: { id: true, title: true, slug: true, color: true },
+          },
           courses: {
             where: { status: "PUBLISHED" },
             orderBy: { orderIndex: "asc" },

@@ -9,6 +9,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { RibbonTag, StickerImage, WashiCard } from "@/components/ui/PastelPrimitives";
 import { ArrowRightIcon, CheckRibbonIcon, LockIcon } from "@/components/icons/CartoonIcons";
 import { STICKERS } from "@/lib/stickers";
+import { playlistColorToRibbon } from "@/lib/playlist-colors";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +28,15 @@ export default async function RoadmapDetailPage({
     prisma.user.findUnique({ where: { id: session.userId } }),
     prisma.appSettings.findUnique({ where: { id: "default" } }),
     prisma.roadmap.findFirst({
-      where: { slug, status: "PUBLISHED" },
+      where: {
+        slug,
+        status: "PUBLISHED",
+        OR: [{ playlistId: null }, { playlist: { status: "PUBLISHED" } }],
+      },
       include: {
+        playlist: {
+          select: { id: true, title: true, slug: true, color: true },
+        },
         courses: {
           where: { status: "PUBLISHED" },
           orderBy: { orderIndex: "asc" },
@@ -65,12 +73,17 @@ export default async function RoadmapDetailPage({
           tapeColor="lilac"
           title={roadmap.title}
           badge={
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <StickerImage
                 src={STICKERS.sheet.bunnyBook}
                 alt="Kelinci Buku"
                 className="w-10 h-10"
               />
+              {roadmap.playlist && (
+                <RibbonTag color={playlistColorToRibbon(roadmap.playlist.color)}>
+                  {roadmap.playlist.title}
+                </RibbonTag>
+              )}
               <RibbonTag color="butter">{roadmap.levelLabel}</RibbonTag>
             </div>
           }

@@ -23,6 +23,18 @@ import {
   WashiCard,
 } from "@/components/ui/PastelPrimitives";
 import { STICKERS } from "@/lib/stickers";
+import {
+  playlistColorToRibbon,
+  type PlaylistNoteColor,
+} from "@/lib/playlist-colors";
+
+export interface WorkspacePlaylist {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  color: PlaylistNoteColor;
+}
 
 export interface WorkspaceCourse {
   id: string;
@@ -44,6 +56,13 @@ export interface WorkspaceRoadmap {
   slug: string;
   description: string;
   levelLabel: string;
+  playlistId?: string | null;
+  playlist?: {
+    id: string;
+    title: string;
+    slug: string;
+    color: PlaylistNoteColor;
+  } | null;
   courses: WorkspaceCourse[];
 }
 
@@ -83,6 +102,7 @@ export function BentoWorkspaceClient({
   todayKey,
   initialStreak,
   achievements,
+  playlists = [],
   roadmaps,
   initialTasks,
   initialNotes,
@@ -93,6 +113,7 @@ export function BentoWorkspaceClient({
   todayKey: string;
   initialStreak: { currentStreak: number; activeToday: boolean };
   achievements: AchievementBadge[];
+  playlists?: WorkspacePlaylist[];
   roadmaps: WorkspaceRoadmap[];
   initialTasks: WorkspaceTaskItem[];
   initialNotes: WorkspaceNoteItem[];
@@ -102,12 +123,37 @@ export function BentoWorkspaceClient({
   const [notes, setNotes] = useState(initialNotes);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newNoteBody, setNewNoteBody] = useState("");
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>("ALL");
   const [selectedRoadmapId, setSelectedRoadmapId] = useState(
     roadmaps[0]?.id ?? ""
   );
 
+  const filteredRoadmaps =
+    selectedPlaylistId === "ALL"
+      ? roadmaps
+      : selectedPlaylistId === "NONE"
+        ? roadmaps.filter((r) => !r.playlistId)
+        : roadmaps.filter((r) => r.playlistId === selectedPlaylistId);
+
   const activeRoadmap =
-    roadmaps.find((r) => r.id === selectedRoadmapId) ?? roadmaps[0] ?? null;
+    filteredRoadmaps.find((r) => r.id === selectedRoadmapId) ??
+    filteredRoadmaps[0] ??
+    null;
+
+  const hasUncategorizedRoadmaps = roadmaps.some((r) => !r.playlistId);
+
+  function selectPlaylist(nextId: string) {
+    setSelectedPlaylistId(nextId);
+    const matching =
+      nextId === "ALL"
+        ? roadmaps
+        : nextId === "NONE"
+          ? roadmaps.filter((r) => !r.playlistId)
+          : roadmaps.filter((r) => r.playlistId === nextId);
+    if (matching.length > 0 && !matching.some((r) => r.id === selectedRoadmapId)) {
+      setSelectedRoadmapId(matching[0].id);
+    }
+  }
 
   const allCourses = roadmaps.flatMap((r) => r.courses);
   const totalModules = allCourses.reduce((s, c) => s + c.totalModules, 0);
@@ -257,32 +303,95 @@ export function BentoWorkspaceClient({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Winding Stepped Roadmap (8 cols) */}
         <div className="lg:col-span-8 flex flex-col gap-5 min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <span className="font-[family-name:var(--font-mali)] text-xs font-bold uppercase tracking-wider text-[#645495]">
-                Kurikulum Personal
-              </span>
-              <h2 className="font-[family-name:var(--font-gaegu)] text-3xl font-bold text-[#4a3e3d]">
-                {activeRoadmap?.title ?? "Belum Ada Roadmap"}
-              </h2>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-[family-name:var(--font-mali)] text-xs font-bold uppercase tracking-wider text-[#645495]">
+                    Kurikulum Personal
+                  </span>
+                  {activeRoadmap?.playlist && (
+                    <RibbonTag
+                      color={playlistColorToRibbon(activeRoadmap.playlist.color)}
+                    >
+                      {activeRoadmap.playlist.title}
+                    </RibbonTag>
+                  )}
+                </div>
+                <h2 className="font-[family-name:var(--font-gaegu)] text-3xl font-bold text-[#4a3e3d]">
+                  {activeRoadmap?.title ??
+                    (selectedPlaylistId !== "ALL"
+                      ? "Belum Ada Roadmap di Playlist Ini"
+                      : "Belum Ada Roadmap")}
+                </h2>
+              </div>
+
+              {filteredRoadmaps.length > 1 && (
+                <div className="flex flex-wrap gap-2">
+                  {filteredRoadmaps.map((rm) => (
+                    <button
+                      key={rm.id}
+                      type="button"
+                      onClick={() => setSelectedRoadmapId(rm.id)}
+                      className={`px-3.5 py-2 rounded-full min-h-[44px] font-[family-name:var(--font-mali)] text-xs font-bold border transition-colors cursor-pointer ${
+                        rm.id === activeRoadmap?.id
+                          ? "bg-[#C8B6FF] text-[#200d4e] border-[#645495]"
+                          : "bg-white text-[#534342] border-[#eadfd5]"
+                      }`}
+                    >
+                      {rm.title}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {roadmaps.length > 1 && (
-              <div className="flex flex-wrap gap-2">
-                {roadmaps.map((rm) => (
+            {playlists.length > 0 && (
+              <div
+                aria-label="Filter Playlist Roadmap"
+                className="flex flex-wrap items-center gap-2"
+              >
+                <span className="font-[family-name:var(--font-mali)] text-xs font-bold text-[#8d6e63]">
+                  Playlist:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => selectPlaylist("ALL")}
+                  className={`px-3.5 py-1.5 rounded-full min-h-[40px] font-[family-name:var(--font-mali)] text-xs font-bold border transition-colors cursor-pointer ${
+                    selectedPlaylistId === "ALL"
+                      ? "bg-[#FFAAA6] text-[#4a3e3d] border-[#8e4b49]"
+                      : "bg-white text-[#534342] border-[#eadfd5]"
+                  }`}
+                >
+                  Semua
+                </button>
+                {playlists.map((pl) => (
                   <button
-                    key={rm.id}
+                    key={pl.id}
                     type="button"
-                    onClick={() => setSelectedRoadmapId(rm.id)}
-                    className={`px-3.5 py-2 rounded-full min-h-[44px] font-[family-name:var(--font-mali)] text-xs font-bold border transition-colors ${
-                      rm.id === activeRoadmap?.id
-                        ? "bg-[#C8B6FF] text-[#200d4e] border-[#645495]"
+                    onClick={() => selectPlaylist(pl.id)}
+                    className={`px-3.5 py-1.5 rounded-full min-h-[40px] font-[family-name:var(--font-mali)] text-xs font-bold border transition-colors cursor-pointer ${
+                      selectedPlaylistId === pl.id
+                        ? "bg-[#FFAAA6] text-[#4a3e3d] border-[#8e4b49]"
                         : "bg-white text-[#534342] border-[#eadfd5]"
                     }`}
                   >
-                    {rm.title}
+                    {pl.title}
                   </button>
                 ))}
+                {hasUncategorizedRoadmaps && (
+                  <button
+                    type="button"
+                    onClick={() => selectPlaylist("NONE")}
+                    className={`px-3.5 py-1.5 rounded-full min-h-[40px] font-[family-name:var(--font-mali)] text-xs font-bold border transition-colors cursor-pointer ${
+                      selectedPlaylistId === "NONE"
+                        ? "bg-[#FFAAA6] text-[#4a3e3d] border-[#8e4b49]"
+                        : "bg-white text-[#534342] border-[#eadfd5]"
+                    }`}
+                  >
+                    Lainnya
+                  </button>
+                )}
               </div>
             )}
           </div>

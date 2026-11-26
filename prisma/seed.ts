@@ -140,12 +140,27 @@ export async function seedDatabase(
     },
   });
 
+  const starterPlaylist = await db.playlist.upsert({
+    where: { slug: "jago-frontend" },
+    update: {},
+    create: {
+      title: "Jago Frontend",
+      slug: "jago-frontend",
+      description:
+        "Kumpulan roadmap untuk menguasai HTML, CSS, React, hingga membangun UI modern.",
+      color: "PINK",
+      status: "PUBLISHED",
+      orderIndex: 1,
+    },
+  });
+
   const existingRoadmap = await db.roadmap.findUnique({
     where: { slug: "jalur-belajar-fullstack-ai" },
   });
   if (!existingRoadmap) {
     await db.roadmap.create({
       data: {
+        playlistId: starterPlaylist.id,
         title: "Jalur Belajar Fullstack & AI",
         slug: "jalur-belajar-fullstack-ai",
         description:

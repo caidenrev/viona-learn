@@ -5,6 +5,13 @@ const mockRequireRole = vi.fn();
 const mockPrisma = {
   appSettings: { findUnique: vi.fn(), upsert: vi.fn() },
   user: { findUnique: vi.fn(), update: vi.fn() },
+  playlist: {
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  },
   roadmap: { findMany: vi.fn(), create: vi.fn(), findUnique: vi.fn(), update: vi.fn(), delete: vi.fn() },
   course: { findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn() },
   quizQuestion: { deleteMany: vi.fn(), createMany: vi.fn() },
@@ -159,5 +166,100 @@ describe("admin API routes", () => {
     );
     expect(delRes.status).toBe(200);
     expect(mockPrisma.course.delete).toHaveBeenCalledWith({ where: { id: "c1" } });
+  });
+
+  it("allows TEACHER to create, update, and delete a playlist and assign it to a roadmap", async () => {
+    mockRequireRole.mockResolvedValue({
+      userId: "t1",
+      username: "mentor",
+      name: "Mentor",
+      role: "TEACHER",
+    });
+    mockPrisma.playlist.findUnique.mockResolvedValue(null);
+    mockPrisma.playlist.create.mockResolvedValue({
+      id: "pl1",
+      title: "Jago Frontend",
+      slug: "jago-frontend",
+      description: "Kumpulan roadmap frontend",
+      color: "PINK",
+      status: "PUBLISHED",
+      orderIndex: 1,
+      _count: { roadmaps: 0 },
+    });
+    mockPrisma.playlist.update.mockResolvedValue({
+      id: "pl1",
+      title: "Jago Frontend Pro",
+      slug: "jago-frontend",
+      description: "Updated",
+      color: "LAV",
+      status: "PUBLISHED",
+      orderIndex: 1,
+      _count: { roadmaps: 1 },
+    });
+    mockPrisma.playlist.delete.mockResolvedValue({ id: "pl1" });
+    mockPrisma.roadmap.update.mockResolvedValue({
+      id: "r1",
+      title: "Frontend Mastery",
+      playlistId: "pl1",
+      playlist: {
+        id: "pl1",
+        title: "Jago Frontend Pro",
+        slug: "jago-frontend",
+        color: "LAV",
+      },
+    });
+
+    const { POST: createPlaylist } = await import("@/app/api/admin/playlists/route");
+    const createRes = await createPlaylist(
+      new Request("http://localhost/api/admin/playlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "Jago Frontend",
+          description: "Kumpulan roadmap frontend",
+          color: "PINK",
+        }),
+      })
+    );
+    expect(createRes.status).toBe(201);
+    const created = await createRes.json();
+    expect(created.playlist.slug).toBe("jago-frontend");
+
+    const { PATCH: patchPlaylist, DELETE: deletePlaylist } = await import(
+      "@/app/api/admin/playlists/[id]/route"
+    );
+    const patchPlRes = await patchPlaylist(
+      new Request("http://localhost/api/admin/playlists/pl1", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "Jago Frontend Pro", color: "LAV" }),
+      }),
+      { params: Promise.resolve({ id: "pl1" }) }
+    );
+    expect(patchPlRes.status).toBe(200);
+
+    const { PATCH: patchRoadmap } = await import("@/app/api/admin/roadmaps/[id]/route");
+    const assignRes = await patchRoadmap(
+      new Request("http://localhost/api/admin/roadmaps/r1", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playlistId: "pl1" }),
+      }),
+      { params: Promise.resolve({ id: "r1" }) }
+    );
+    expect(assignRes.status).toBe(200);
+    const assigned = await assignRes.json();
+    expect(assigned.roadmap.playlistId).toBe("pl1");
+
+    const delPlRes = await deletePlaylist(
+      new Request("http://localhost/api/admin/playlists/pl1", {
+        method: "DELETE",
+      }),
+      { params: Promise.resolve({ id: "pl1" }) }
+    );
+    expect(delPlRes.status).toBe(200);
+    expect(mockPrisma.playlist.delete).toHaveBeenCalledWith({
+      where: { id: "pl1" },
+    });
   });
 });

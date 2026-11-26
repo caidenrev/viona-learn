@@ -84,8 +84,24 @@ model AppSettings {
   updatedAt       DateTime @updatedAt
 }
 
+model Playlist {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?
+  color       NoteColor     @default(PINK)
+  status      PublishStatus @default(PUBLISHED)
+  orderIndex  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  roadmaps Roadmap[]
+}
+
 model Roadmap {
   id          String        @id @default(cuid())
+  playlistId  String?
+  playlist    Playlist?     @relation(fields: [playlistId], references: [id], onDelete: SetNull)
   title       String
   slug        String        @unique
   description String
@@ -97,6 +113,8 @@ model Roadmap {
   updatedAt   DateTime      @updatedAt
 
   courses Course[]
+
+  @@index([playlistId, orderIndex])
 }
 
 model Course {
